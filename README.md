@@ -1,2 +1,2 @@
-# 470-project
+# CMPT470 Fall 2020 Project
 
