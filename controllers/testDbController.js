@@ -2,7 +2,7 @@ const GameList = require("../models/gameList");
 
 // Get the title of every GameList.
 exports.index = function (req, res, next) {
-  GameList.find({}, "title").exec((err, allGameLists) => {
+  GameList.find().exec((err, allGameLists) => {
     if (err) return next(err);
     res.render("testDbIndex", { gameLists: allGameLists });
   });
@@ -28,7 +28,7 @@ exports.createPost = function (req, res, next) {
 };
 
 // Get details of a particular GameList.
-exports.detail = function (req, res, next) {
+exports.details = function (req, res, next) {
   GameList.findById(req.params.id).exec((err, foundGameList) => {
     if (err) return next(err);
     res.render("testDbDetail", { gameList: foundGameList });

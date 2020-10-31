@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1 "TEST: Game List Details"
+
+    ul
+        li Title: #{gameList.title}
+        li Description: #{gameList.description}
+        li Creator: #{gameList.creatorUsername}
+        li Created on: #{gameList.createdDate}
