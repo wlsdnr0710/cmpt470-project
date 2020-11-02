@@ -62,3 +62,6 @@ typings/
 
 # IntelliJ IDE config files
 .idea
+
+# secrets and tokens
+token.txt

@@ -4,7 +4,42 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const passport = require("passport");
+const session = require("express-session");
+const SteamStrategy = require("passport-steam").Strategy;
+const fs = require("fs");
+//grab steam key
+try {
+  var steamkey = fs.readFileSync('./token.txt', 'utf8')
+} catch (err) {
+  console.error(err)
+}
+//passport for persistent login sessions
+passport.serializeUser(function(user, done) {
+  //TODO: store just the user id in a User in the Database
+  //for now just serializing the entire steam profile
+  done(null, user);
+})
 
+passport.deserializeUser(function(obj, done) {
+  //TODO: same as serialize
+  done(null, obj);
+})
+
+passport.use(new SteamStrategy({
+  returnURL: 'http://localhost:3000/login/steam/return',
+  realm: 'http://localhost:3000',
+  apiKey: steamkey
+  },
+  function(identifier, profile, done) {
+    process.nextTick(function () {
+      profile.identifier = identifier;
+      //TODO: similar to passport, associate steam id with user in database and return the user
+      //for now just returning the steam user
+      return done(null, profile);
+    });
+  }
+));
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const testDbRouter = require("./routes/testDb");
@@ -27,6 +62,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({
+  secret: 'your secret',
+  name: 'name of session id',
+  resave: true,
+  saveUninitialized: true}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
