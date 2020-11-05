@@ -29,6 +29,7 @@ passport.deserializeUser(function(steamid, done) {
 })
 
 passport.use(new SteamStrategy({
+  //i believe this will need to be changed to the domain URL where our site is deployed
   returnURL: 'http://localhost:3000/login/steam/return',
   realm: 'http://localhost:3000',
   apiKey: steamkey
@@ -36,8 +37,6 @@ passport.use(new SteamStrategy({
   function(identifier, profile, done) {
     process.nextTick(function () {
       profile.identifier = identifier;
-      //TODO: similar to passport, associate steam id with user in database and return the user
-      //for now just returning the steam user
       User.findOne({id: profile.id }, function(err, doc) {
         if(err) {
           console.log(err);
