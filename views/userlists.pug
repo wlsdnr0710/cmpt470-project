@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 "TEST: User List Index"
+
+    ul
+    each user in users
+        li
+            | id:
+            p #{user.id}
+            p #{user.username}
+    else
+        li "No users"

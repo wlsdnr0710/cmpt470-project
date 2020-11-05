@@ -8,6 +8,8 @@ const passport = require("passport");
 const session = require("express-session");
 const SteamStrategy = require("passport-steam").Strategy;
 const fs = require("fs");
+
+var User = require("./models/user");
 //grab steam key
 try {
   var steamkey = fs.readFileSync('./token.txt', 'utf8')
@@ -15,15 +17,15 @@ try {
   console.error(err)
 }
 //passport for persistent login sessions
-passport.serializeUser(function(user, done) {
-  //TODO: store just the user id in a User in the Database
-  //for now just serializing the entire steam profile
-  done(null, user);
+passport.serializeUser(function(id, done) {
+  done(null, id);
 })
 
-passport.deserializeUser(function(obj, done) {
-  //TODO: same as serialize
-  done(null, obj);
+passport.deserializeUser(function(steamid, done) {
+  User.findOne({ id: steamid }, function(err, user) {
+    done(err, user);
+  });
+  //done(null, obj);
 })
 
 passport.use(new SteamStrategy({
@@ -36,7 +38,23 @@ passport.use(new SteamStrategy({
       profile.identifier = identifier;
       //TODO: similar to passport, associate steam id with user in database and return the user
       //for now just returning the steam user
-      return done(null, profile);
+      User.findOne({id: profile.id }, function(err, doc) {
+        if(err) {
+          console.log(err);
+        }
+        else {
+          if(doc) {//user exists, return the found user from db
+            return done(null, profile.id);
+          }
+          else {//create a new user
+            User.create({ id: profile.id, username: profile.displayName }, function(err, user) {
+              if(err) return handleError(err);
+            });
+            return done(null, profile.id);
+          }
+        }
+      })
+      //return done(null, profile);
     });
   }
 ));
@@ -44,6 +62,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const testDbRouter = require("./routes/testDb");
 var loginRouter = require('./routes/login');
+const user = require("./models/user");
 const app = express();
 
 // Connect to MongoDB via Mongoose
