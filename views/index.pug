@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  if !user
+    h2 please login
+    p
+    a(href="login/steam") Sign in with steam
+  else
+    h2 hello #{user.username} 
+    a(href="logout") Logout
