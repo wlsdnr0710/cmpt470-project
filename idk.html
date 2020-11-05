@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="gamelists.css">
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script>
+        function insertAfter(newNode, referenceNode) {
+            referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+        }
+        function addtolist(){
+            var list_table = document.getElementById('table1');
+            
+            for (var i = 0, row; row = list_table.rows[i]; i++) {
+                // assume each row takes 3 games
+                if(list_table.rows[0].cells.length<3){
+                    console.log("found, " +i);
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        //iterate through columns
+                        //columns would be accessed using the "col" variable assigned in the for loop
+                        console.log(col);
+                    }  
+                }
+            }
+            var list = document.getElementById("gamelists");
+            var cell = document.createElement("td");
+            var newNode = document.createTextNode("This is new.");
+            insertAfter(newNode, list_table);
+            var element = document.getElementById("div1");
+        }
+        
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul class="horizontal">
+                <li>
+                    <span  id="firstword">gamelists </span> 
+                </li>
+                <li>
+                    <p style="float:right">home</p>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <table id="table1">
+        <tr class="row">
+            <td >
+                <a href="gamelist.html" >
+                    <img src="img/0.jpg" >
+                </a>>
+                <p>  Some description</p>
+                <button class="button">See More </button>
+            </td>
+            <td >
+                <a href="gamelist.html" >
+                    <img src="img/1.jpg" >
+                </a>>
+                <p>  Some description</p>
+                <button class="button">See More </button>
+            </td>
+        </tr>
+
+       
+    </table>
+    <script>
+        addtolist();
+    </script>
+</body>
+</html>
