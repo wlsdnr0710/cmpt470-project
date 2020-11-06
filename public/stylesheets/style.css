@@ -5,4 +5,48 @@ body {
 
 a {
   color: #00B7FF;
+  text-decoration: none;
+}
+
+.ulRedirect {
+  height: 75vh;
+  width: 50vw;
+  overflow: auto
+}
+
+.liRedirect {
+  list-style-type: none;
+  margin: 5px;
+  padding: 0px;
+  border: 2px solid black;
+  border-radius: 1vw;
+}
+
+.liRedirect a {
+  color: inherit;
+
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px 0px;
+  display: inline-block
+}
+
+.liRedirect h3 {
+  color: inherit;
+
+  padding-right: 20px;
+  padding-left: 20px;
+  display: inline-block
+}
+
+.liRedirect:hover {
+  background-color: lightgray;
+  transition: color 1s;
+}
+
+
+#createBacklogLink {
+  color: inherit;
+  text-decoration: none;
 }

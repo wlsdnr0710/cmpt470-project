@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= user.name
+
+    h2= "Backlogs"
+    ul(class='ulRedirect')
+        each gameList in user.gameLists
+            li(class='liRedirect')
+                a(href=gameList.url) <h3> #{gameList.title} </h3>
+    a(href='/newList' id='createBacklogLink') Create Backlog List
+
