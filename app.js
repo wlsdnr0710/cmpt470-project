@@ -53,6 +53,8 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const testDbRouter = require("./routes/testDb");
 var loginRouter = require('./routes/login');
+const userHomeRouter = require('./routes/userHome');
+const gameListRouter = require('./routes/gameList');
 const user = require("./models/user");
 const app = express();
 
@@ -87,6 +89,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use("/testdb", testDbRouter);
+app.use('/userHome', userHomeRouter);
+app.use('/gameList', gameListRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
