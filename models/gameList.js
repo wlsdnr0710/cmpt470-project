@@ -6,6 +6,7 @@ const GameListSchema = Schema({
   description: { type: String, maxlength: 250 },
   creatorUsername: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
+  gameIds: { type: [Number] }, // Steam game appids
 });
 
 // Note: get does not work with an arrow function.

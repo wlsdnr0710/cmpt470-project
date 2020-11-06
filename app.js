@@ -30,7 +30,7 @@ passport.deserializeUser(function(steamid, done) {
 
 passport.use(new SteamStrategy({
   //i believe this will need to be changed to the domain URL where our site is deployed
-  returnURL: 'http://localhost:3000/login/steam/return',
+  returnURL: 'http://localhost:3000/login/steam',
   realm: 'http://localhost:3000',
   apiKey: steamkey
   },
@@ -38,22 +38,14 @@ passport.use(new SteamStrategy({
     process.nextTick(function () {
       profile.identifier = identifier;
       User.findOne({id: profile.id }, function(err, doc) {
-        if(err) {
-          console.log(err);
-        }
-        else {
-          if(doc) {//user exists, return the found user from db
-            return done(null, profile.id);
-          }
-          else {//create a new user
-            User.create({ id: profile.id, username: profile.displayName }, function(err, user) {
-              if(err) return handleError(err);
-            });
-            return done(null, profile.id);
-          }
-        }
-      })
-      //return done(null, profile);
+        if(err) return console.log(err);
+        //user exists
+        if(doc) return done(null, profile.id);
+        User.create({ id: profile.id, username: profile.displayName }, function(err, user) {
+          if(err) return handleError(err);
+        });
+        return done(null, profile.id);
+      });
     });
   }
 ));
