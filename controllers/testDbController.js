@@ -4,6 +4,9 @@ const GameList = require("../models/gameList");
 exports.index = function (req, res, next) {
   GameList.find().exec((err, allGameLists) => {
     if (err) return next(err);
+    for (i=0; i<allGameLists.length; i++) {
+      console.log(allGameLists[i]);
+    }
     res.render("testDbIndex", { gameLists: allGameLists });
   });
 };
