@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 "Gamelist Details"
+
+  ul
+  each game in games
+    li
+      h1 #{game.name}
+      img(src=game.image)
+      p #{game.short_description}
+      p #{game.price_original} -> #{game.price_discounted}
+  else
+    li "No Game Lists"
