@@ -57,6 +57,8 @@ const gameDetail = require('./routes/gameDetail');
 const gameList = require("./models/gameList");
 
 var loginRouter = require('./routes/login');
+const userHomeRouter = require('./routes/userHome');
+const gameListRouter = require('./routes/gameList');
 const user = require("./models/user");
 const app = express();
 

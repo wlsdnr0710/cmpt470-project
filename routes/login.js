@@ -5,8 +5,13 @@ var passport = require('passport');
 const userController = require("../controllers/loginController");
 
 router.get('/', function (req, res, next) {
-    res.render('login', {user: req.user });
-  })
+  if (req.user)
+  {
+    res.redirect('/userHome');
+  }
+
+  res.render('login', {user: req.user });
+})
 
 router.get('/logout', function(req, res){
 req.logout();
