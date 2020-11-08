@@ -3,7 +3,7 @@ extends layout
 block content
     h1= "TEST: Create a Game List"
 
-    form(method='POST' action='glists/createform')
+    form(method='POST')
         label(for='title') Title of Game List:
         input#title(type='text', name='title')
         br
@@ -18,7 +18,7 @@ block content
             each game in reduced_games
                 img(src=game.img)
                 label #{game.name}
-                input(type='checkbox' id=game.appid name=gameids) 
+                input(type='checkbox' id=game.appid name='gameIds' value=game.appid)
             else
                 p = 'empty'     
         input(type='submit') 

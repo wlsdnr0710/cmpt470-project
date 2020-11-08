@@ -14,4 +14,8 @@ GameListSchema.virtual("testUrl").get(function () {
   return "/testdb/details/" + this._id;
 });
 
+GameListSchema.virtual("detailsUrl").get(function () {
+  return "/gameDetail/" + this._id;
+});
+
 module.exports = mongoose.model("GameList", GameListSchema);

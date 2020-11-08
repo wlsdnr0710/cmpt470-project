@@ -26,8 +26,6 @@ function createGameDetail(info) {
     image: info.header_image,
     short_description: info.short_description,
     developers: info.developers,
-    price_original: info.price_overview.initial_formatted,
-    price_discounted: info.price_overview.final_formatted,
   };
 }
 
