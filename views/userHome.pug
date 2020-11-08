@@ -1,12 +1,14 @@
 extends layout
 
 block content
-    h1= user.name
+    h1= user.username
 
     h2= "Backlogs"
     ul(class='ulRedirect')
-        each gameList in user.gameLists
+        each gameList in gameLists
             li(class='liRedirect')
-                a(href=gameList.url) <h3> #{gameList.title} </h3>
+                a(href='/gamelist/'+user.id+'/'+gameList.listid) <h3> #{gameList.title} </h3>
+                    each icon in gameList.icons
+                        <img class='icon_img' src=#{icon} alt=''+icon>
     a(href='/newList' id='createBacklogLink') Create Backlog List
 

@@ -10,7 +10,7 @@ a {
 
 .ulRedirect {
   height: 75vh;
-  width: 50vw;
+  width: 60vw;
   overflow: auto
 }
 
@@ -20,6 +20,8 @@ a {
   padding: 0px;
   border: 2px solid black;
   border-radius: 1vw;
+  display: flex;
+  overflow: hidden;
 }
 
 .liRedirect a {
@@ -35,8 +37,10 @@ a {
 .liRedirect h3 {
   color: inherit;
 
+  padding: 20px;
   padding-right: 20px;
   padding-left: 20px;
+  margin: auto;
   display: inline-block
 }
 
