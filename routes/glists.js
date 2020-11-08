@@ -79,6 +79,11 @@ router.post("/createform", function (req, res, next) {
 
   gameList.save((err) => {
     if (err) return next(err);
+
+    let currUser = req.user;
+    currUser.gameListIds.push(gameList._id);
+    currUser.save();
+
     res.redirect(gameList.detailsUrl);
   });
 });
