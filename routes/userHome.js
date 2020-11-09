@@ -70,7 +70,7 @@ router.get("/", function (req, res, next) {
           console.log("finding game ids for list");
           if (!err2) {
             console.log("found");
-            userGameLists[req.user.gameListIds.indexOf(gameListId)] = foundGameList;
+            userGameLists[req.user.gameListIds.indexOf(gameListIdString)] = foundGameList;
           }
           done();
         });
@@ -99,6 +99,7 @@ router.get("/", function (req, res, next) {
             console.log("icon url: ", gamesinfo[gameIDsList[j]].icon_url);
           }
           gamesLists[gamesLists.length -1].icons = icon_urls;
+          gamesLists[gamesLists.length -1].gameDetailsUrl = "/gameDetail/" + req.user.gameListIds[i];
         }
 
         console.log(gamesLists);
