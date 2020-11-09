@@ -1,7 +1,9 @@
 const express = require("express");
 const request = require("request");
+const async = require("async");
 const router = express.Router();
 
+const GameList = require("../models/gameList");
 gameListsIndex = [
   { title: "game list 1", listid: "0" },
   { title: "game list 2", listid: "1" },
@@ -40,10 +42,12 @@ router.get("/", function (req, res, next) {
       headers: { "User-Agent": "request" },
     },
     function (err, resp, data) {
-      for (var i = 0; i < data.response.game_count; i++) {
-        //keys = [];
-        //for(var k in data.response.games[i]) keys.push(k);
-        //console.log('keys: ', keys);
+      console.log("err: ", err);
+      console.log("resp: ", resp);
+      console.log("data: ", data);
+      console.log("response of request, num of games: ", data.response.game_count);
+      for (var i = 0; i < data.response.game_count; i++)
+      {
         var gameid = data.response.games[i].appid;
         var gameinfo = {
           name: data.response.games[i].name,
@@ -54,45 +58,57 @@ router.get("/", function (req, res, next) {
             data.response.games[i].img_icon_url +
             ".jpg",
         };
-        //console.log('gameinfo: ', i, gameinfo);
+        console.log("gameinfo: ", i, gameinfo);
         gamesinfo[gameid] = gameinfo;
       }
-      keys = [];
-      for (var k in gamesinfo) keys.push(k);
-      console.log("gamesinfo keys: ", keys);
-      keys.forEach(function (k) {
-        console.log("key: ", k, "val: ", gamesinfo[k]);
-      });
-
-      var gamesLists = [];
-      for (var i = 0; i < gameListsIndex.length; i++) {
-        var list = gameListsIndex[i];
-        console.log("list: ", list);
-        gamesLists.push(list);
-        //TEMP CODE
-        icon_urls = [];
-        for (
-          var j = parseInt(list.listid);
-          j < parseInt(list.listid) + 3;
-          j++
-        ) {
-          icon_urls.push(gamesinfo[keys[j]].icon_url);
+      console.log("checked all games");
+      var userGameLists = new Array(req.user.gameListIds.length);
+      async.forEach(req.user.gameListIds, function(gameListIdString, done)
+      {
+        console.log("gamelistid: ", gameListIdString);
+        GameList.findById(gameListIdString).exec((err2, foundGameList) => {
+          console.log("finding game ids for list");
+          if (!err2) {
+            console.log("found");
+            userGameLists[req.user.gameListIds.indexOf(gameListId)] = foundGameList;
+          }
+          done();
+        });
+      },
+      function(async_err)
+      {
+        if (async_err) {
+          next(async_err);
         }
-        gamesLists[gamesLists.length - 1].icons = icon_urls;
-      }
+        
+        userGameLists = userGameLists.filter(function(ids){
+          return ids != undefined;
+        });
 
-      console.log(gamesLists);
-      res.render("userHome", {
-        title: "Express",
-        user: req.user,
-        gameLists: gamesLists,
+        var gamesLists = [];
+        for (var i = 0; i < userGameLists.length; i++) 
+        {
+          var gameIDsList = userGameLists[i].gameIds;
+          console.log("list: ", gameIDsList);
+          gamesLists.push({title: userGameLists[i].title});
+          
+          icon_urls = [];
+          for(var j = 0; j < gameIDsList.length; j++) 
+          {
+            icon_urls.push(gamesinfo[gameIDsList[j]].icon_url);
+            console.log("icon url: ", gamesinfo[gameIDsList[j]].icon_url);
+          }
+          gamesLists[gamesLists.length -1].icons = icon_urls;
+        }
+
+        console.log(gamesLists);
+        res.render("userHome", {
+          title: "Express",
+          user: req.user,
+          gameLists: gamesLists,
+        });
       });
-    }
-  );
-
-  //res.render('gameList', { title: 'Express',  user: {name: "ME",  gameList: gameListArr[req.params.id] } } )
-
-  //res.render('userHome', { title: 'Express',  user: req.user, gameLists: gameListsIndex } );
+    });
 });
 
 module.exports = router;
