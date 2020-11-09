@@ -9,6 +9,6 @@ block content
             li(class='liRedirect')
                 a(href=gameList.gameDetailsUrl) <h3> #{gameList.title} </h3>
                     each icon in gameList.icons
-                        <img class='icon_img' src=#{icon} alt=''+icon>
+                        img(class='icon_img' src=icon)
     a(href='/glists/createform' id='createBacklogLink') Create Backlog List
 

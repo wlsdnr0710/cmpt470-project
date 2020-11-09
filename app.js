@@ -32,8 +32,8 @@ passport.use(
   new SteamStrategy(
     {
       //i believe this will need to be changed to the domain URL where our site is deployed
-      returnURL: "https://steam-rolled.wl.r.appspot.com/login/steam",
-      realm: "https://steam-rolled.wl.r.appspot.com/",
+      returnURL: "http://steam-rolled.wl.r.appspot.com/login/steam",
+      realm: "http://steam-rolled.wl.r.appspot.com/",
       apiKey: steamkey,
     },
     function (identifier, profile, done) {

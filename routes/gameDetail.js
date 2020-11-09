@@ -61,35 +61,4 @@ router.get("/:id", function (req, res, next) {
   });
 });
 
-/*router.get("/:id", function (req, res, next) {
-  GameList.findById(req.params.id).exec((err, foundGameList) => {
-    var gameDetails = [];
-    var gameDetail = {};
-    for (let i = 0; i < foundGameList.gameIds.length; i++) {
-      let j = 0;
-      search(foundGameList.gameIds[i] * 1, function (err, data) {
-        if (err) {
-          console.log(err);
-          j++;
-        }
-        gameDetail = {
-          name: data.name,
-          image: data.header_image,
-          short_description: data.short_description,
-          developers: data.developers,
-          price_original: data.price_overview.initial_formatted,
-          price_discounted: data.price_overview.final_formatted,
-        };
-        gameDetails.push(gameDetail);
-        // console.log(i)
-        // console.log(gameDetails)
-        // TODO: fix scope problem.
-        if (gameDetails.length + j == foundGameList.gameIds.length) {
-          res.render("gameDetail", { games: gameDetails });
-        }
-      });
-    }
-  });
-});*/
-
 module.exports = router;

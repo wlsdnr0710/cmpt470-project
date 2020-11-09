@@ -18,4 +18,4 @@
 - Merge your changes into `master` and make sure you are on the `master` branch
 
 Navigate to the directory containing the repo in a terminal and execute `gcloud app deploy` to upload the repo to the 
-cloud service. Then execute `gcloud app browse` or navigate to `https://steam-rolled.wl.r.appspot.com/` in your browser.
+cloud service. Then execute `gcloud app browse` or navigate to `http://steam-rolled.wl.r.appspot.com/` in your browser.
