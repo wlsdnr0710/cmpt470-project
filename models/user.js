@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   username: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
   gameListIds: { type: [String] },
+  ownedGameIds: { type: [Number] },
 });
 
 module.exports = mongoose.model("user", UserSchema);
