@@ -118,7 +118,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
 
         console.log(gamesLists);
         res.render("userPage", {
-          title: "Express",
+          title: pageUser.username + " | Steam Rolled",
           user: pageUser,
           isLoggedInUserPage,
           gameLists: gamesLists,
