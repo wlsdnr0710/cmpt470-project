@@ -14,7 +14,7 @@ exports.redirectToLoggedInPage = function (req, res, next) {
 
 exports.renderUserPagebyId = async function (req, res, next) {
   if (!req.user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
 
   // assume page of logged in user
