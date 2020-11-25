@@ -7,7 +7,7 @@ const userController = require("../controllers/loginController");
 router.get('/', function (req, res, next) {
   if (req.user)
   {
-    res.redirect('/userHome');
+    res.redirect('/userPage');
   }
 
   res.render('login', {user: req.user });
