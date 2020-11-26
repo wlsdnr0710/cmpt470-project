@@ -5,18 +5,10 @@ const User = require("../models/user");
 const GameList = require("../models/gameList");
 
 exports.redirectToLoggedInPage = function (req, res, next) {
-  if (!req.user) {
-    res.redirect("/login");
-  }
-
   res.redirect('/userPage/' + req.user._id);
 };
 
 exports.renderUserPagebyId = async function (req, res, next) {
-  if (!req.user) {
-    return res.redirect("/login");
-  }
-
   // assume page of logged in user
   var pageUser = req.user;
   var isLoggedInUserPage = true;
