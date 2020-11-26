@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= user.username
+
+    h2= "Following"
+    ul(class='ulRedirect')
+        each followed in allFollowed
+            li(class='liRedirect')
+                a(href=followed.pageUrl) 
+                  img(class='icon_img' src=followed.avatar)
+                  <h3> #{followed.personaname} </h3>
+                        

@@ -7,7 +7,8 @@ block content
     ul(class='ulRedirect')
         each gameList in gameLists
             li(class='liRedirect')
-                a(href=gameList.gameDetailsUrl) <h3> #{gameList.title} </h3>
+                a(href=gameList.gameDetailsUrl) 
+                    <h3> #{gameList.title} </h3>
                     each icon in gameList.icons
                         img(class='icon_img' src=icon)
     if isLoggedInUserPage
