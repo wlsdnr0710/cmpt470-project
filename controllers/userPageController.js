@@ -5,18 +5,10 @@ const User = require("../models/user");
 const GameList = require("../models/gameList");
 
 exports.redirectToLoggedInPage = function (req, res, next) {
-  if (!req.user) {
-    res.redirect("/login");
-  }
-
   res.redirect('/userPage/' + req.user._id);
 };
 
 exports.renderUserPagebyId = async function (req, res, next) {
-  if (!req.user) {
-    return res.redirect("/login");
-  }
-
   // assume page of logged in user
   var pageUser = req.user;
   var isLoggedInUserPage = true;
@@ -125,4 +117,143 @@ exports.renderUserPagebyId = async function (req, res, next) {
         });
       });
     });
+};
+
+exports.renderFollowersPage = async function (req, res, next) {
+
+  // assume page of logged in user
+  var pageUser = req.user;
+  var isLoggedInUserPage = true;
+  if (req.user._id != req.params.id)
+  {
+    // assumption incorrect, page is not of logged in user
+    pageUser = await User.findById(req.params.id);
+    isLoggedInUserPage = false;
+  }
+  console.log("found user", pageUser);
+
+  follower_users = new Array(pageUser.followers.length);
+  for (var f_ind = 0; f_ind < pageUser.followers.length; f_ind++) {
+    var id = pageUser.followers[f_ind];
+    var user = await User.findById(id);
+    console.log("user queried", user);
+    follower_users[f_ind] = user;
+  }
+
+  console.log("follower users,", follower_users);
+  followers_info = new Array(pageUser.followers.length);
+  async.forEach(pageUser.followers, function (follower_id, done) {
+    var user = follower_users[pageUser.followers.indexOf(follower_id)];
+    //http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=XXXXXXXXXXXXXXXXXXXXXXX&steamids=76561197960435530
+    var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
+    var profileQuery =
+    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
+    authkey +
+    "&steamids=" +
+    user.id;
+    console.log("authkey: " + authkey);
+    console.log("id: " + user.id);
+    request.get(
+    {
+      url: profileQuery,
+      json: true,
+      headers: { "User-Agent": "request" },
+    },
+    function (err, resp, data) {
+      if (!err)
+      {
+         console.log(data.response);
+        // get name and avatar
+        followers_info[pageUser.followers.indexOf(follower_id)] = {
+          personaname: data.response.players[0].personaname,
+          avatar: data.response.players[0].avatar,
+          pageUrl: "/userPage/" + follower_id
+        };
+      }
+      done();
+    });
+  },
+  function (async_err) {
+    if (async_err)
+    {
+      console.log("Could not retrieve follower info", async_err);
+    }
+
+    console.log("got info for all followers,", followers_info);
+    res.render("followers", {
+      title: pageUser.username + " | Steam Rolled",
+      user: pageUser,
+      isLoggedInUserPage,
+      followers: followers_info,
+    });
+  });
+};
+
+exports.renderFollowingPage = async function (req, res, next) {
+  // assume page of logged in user
+  var pageUser = req.user;
+  var isLoggedInUserPage = true;
+  if (req.user._id != req.params.id)
+  {
+    // assumption incorrect, page is not of logged in user
+    pageUser = await User.findById(req.params.id);
+    isLoggedInUserPage = false;
+  }
+  console.log("found user", pageUser);
+
+  following_users = new Array(pageUser.following.length);
+  for (var f_ind = 0; f_ind < pageUser.following.length; f_ind++) {
+    var id = pageUser.following[f_ind];
+    var user = await User.findById(id);
+    console.log("user queried", user);
+    following_users[f_ind] = user;
+  }
+
+  console.log("following users,", following_users);
+  following_info = new Array(pageUser.following.length);
+  async.forEach(pageUser.following, function (following_id, done) {
+    var user = following_users[pageUser.following.indexOf(following_id)];
+    //http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=XXXXXXXXXXXXXXXXXXXXXXX&steamids=76561197960435530
+    var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
+    var profileQuery =
+    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
+    authkey +
+    "&steamids=" +
+    user.id;
+    console.log("authkey: " + authkey);
+    console.log("id: " + user.id);
+    request.get(
+    {
+      url: profileQuery,
+      json: true,
+      headers: { "User-Agent": "request" },
+    },
+    function (err, resp, data) {
+      if (!err)
+      {
+         console.log(data.response);
+        // get name and avatar
+        following_info[pageUser.following.indexOf(following_id)] = {
+          personaname: data.response.players[0].personaname,
+          avatar: data.response.players[0].avatar,
+          pageUrl: "/userPage/" + following_id
+        };
+      }
+      done();
+    });
+  },
+  function (async_err) {
+    if (async_err)
+    {
+      console.log("Could not retrieve following info", async_err);
+    }
+
+    console.log("got info for all following,", following_info);
+    res.render("following", {
+      title: pageUser.username + " | Steam Rolled",
+      user: pageUser,
+      isLoggedInUserPage,
+      allFollowed: following_info,
+    });
+  });
 };
