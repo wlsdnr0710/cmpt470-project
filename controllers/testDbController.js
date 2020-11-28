@@ -1,12 +1,9 @@
 const GameList = require("../models/gameList");
 
-// Get the title of every GameList.
+// Return index view.
 exports.index = function (req, res, next) {
   GameList.find().exec((err, allGameLists) => {
     if (err) return next(err);
-    for (i = 0; i < allGameLists.length; i++) {
-      console.log(allGameLists[i]);
-    }
     res.render("testDbIndex", { gameLists: allGameLists });
   });
 };
@@ -38,18 +35,14 @@ exports.details = function (req, res, next) {
   });
 };
 
-// TODO: We might want a method that returns a user's owned games. This can be used
-//       within the game list details view to create a popup that allows users to select
-//       games they want to add to the current game list.
-
 // Adds the given gameId to the given GameList. If the caller relies on the
 // gameId being added to the game list, then it should await this method.
 exports.update = async function (gameId, gameListId) {
   GameList.findById(gameListId).exec((err, gameList) => {
-    if (err) return console.log(err);
+    if (err) return console.error(err);
     gameList.gameIds.push(gameId);
     gameList.save((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err);
     });
   });
 };
@@ -58,10 +51,10 @@ exports.update = async function (gameId, gameListId) {
 // gameId being added to the game list, then it should await this method.
 exports.remove = async function (gameId, gameListId) {
   GameList.findById(gameListId).exec((err, gameList) => {
-    if (err) return console.log(err);
+    if (err) return console.error(err);
     let index = gameList.gameIds.indexOf(gameId);
     if (index < 0)
-      return console.log(
+      return console.error(
         `gameId: ${gameId} not found in gameList: ${gameListId}`
       );
     gameList.gameIds.splice(index, 1);
