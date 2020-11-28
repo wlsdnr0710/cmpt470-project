@@ -19,4 +19,23 @@ GameListSchema.virtual("detailsUrl").get(function () {
   return "/gameDetail/" + this._id;
 });
 
+GameListSchema.virtual("printStatus").get(function () {
+  switch (this.status) {
+    case "ACTIVE":
+      return "In progress";
+    case "COMPLETED":
+      return "Completed";
+    case "DROPPED":
+      return "Dropped";
+    default:
+      return "Unknown";
+  }
+});
+
+GameListSchema.virtual("printDateCreated").get(function () {
+  return this.createdDate.toLocaleString("en-CA", {
+    timeZone: "America/Vancouver",
+  });
+});
+
 module.exports = mongoose.model("GameList", GameListSchema);

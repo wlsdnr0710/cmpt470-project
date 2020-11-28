@@ -8,6 +8,8 @@ block content
             each gameList in gameLists
                 a(class="list-group-item list-group-item-action float-left"
                     href=gameList.testUrl) #{gameList.title}
-                    span(class="badge badge-primary badge-pill float-right") #{gameList.gameIds.length}
+                    span(class="badge badge-primary badge-pill float-right ml-3") #{gameList.gameIds.length}
+                    span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
+                    span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printDateCreated}
             else
                 p This user doesn't have any game lists.
