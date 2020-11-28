@@ -1,13 +1,12 @@
 extends layout
 
 block content
-    h1 "TEST: Game List Index"
+    div(class="container")
+        h1 User's created game lists
 
-    ul
-    each gameList in gameLists
-        li
-            | Title:
-            a(href=gameList.testUrl) #{gameList.title}
-            | Creator: #{gameList.creatorUsername}
-    else
-        li "No Game Lists"
+        div(class="list-group")
+            each gameList in gameLists
+                a(class="list-group-item list-group-item-action float-left w-50" href="#") #{gameList.title}
+                    span(class="badge badge-primary badge-pill float-right") #{gameList.gameIds.length}
+            else
+                p This user doesn't have any game lists.
