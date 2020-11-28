@@ -7,6 +7,7 @@ const GameListSchema = Schema({
   creatorSteamId: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
   gameIds: { type: [Number] }, // Steam game appids
+  status: { type: String, enum: ["ACTIVE", "COMPLETED", "DROPPED"] },
 });
 
 // Note: get does not work with an arrow function.
