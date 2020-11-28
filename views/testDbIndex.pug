@@ -6,7 +6,8 @@ block content
 
         div(class="list-group")
             each gameList in gameLists
-                a(class="list-group-item list-group-item-action float-left w-50" href="#") #{gameList.title}
+                a(class="list-group-item list-group-item-action float-left"
+                    href=gameList.testUrl) #{gameList.title}
                     span(class="badge badge-primary badge-pill float-right") #{gameList.gameIds.length}
             else
                 p This user doesn't have any game lists.
