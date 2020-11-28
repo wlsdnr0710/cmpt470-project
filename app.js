@@ -39,10 +39,10 @@ passport.use(
     function (identifier, profile, done) {
       process.nextTick(function () {
         profile.identifier = identifier;
-        User.findOne({ id: profile.id }, function (err, doc) {
+        User.findOne({ id: profile.id }, function (err, user) {
           if (err) return console.log(err);
           //user exists
-          if (doc) return done(null, profile.id);
+          if (user) return done(null, profile.id);
           User.create(
             { id: profile.id, username: profile.displayName },
             function (err, user) {

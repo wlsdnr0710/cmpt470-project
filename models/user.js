@@ -5,7 +5,7 @@ const UserSchema = new Schema({
   steamId: { type: String, required: true },
   username: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
-  gameListIds: { type: [String] },
+  createdgameListIds: { type: [String] },
   ownedGameIds: { type: [Number] },
 });
 

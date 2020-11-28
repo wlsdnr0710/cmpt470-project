@@ -21,11 +21,9 @@ function emptyResponse(res) {
 
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
-  async.each(games, function (game) {
+  async.each(games, (game) => {
     Games.findOne({ appId: game.appid }).exec((err, game) => {
-      if (err) {
-        return console.error(err);
-      }
+      if (err) return console.error(err);
       if (game) return; // Already cached.
 
       let cacheGame = new Game(
@@ -35,28 +33,29 @@ function cacheGames(games) {
         game.img_icon_url,
         game.img_logo_url
       );
-      cacheGame.save((err) => {
-        console.log(err);
-      });
+
+      cacheGame.save((err) => console.log(err));
     });
   });
 }
 
+// Loads the owned games from the user with id 'steamId' from
+// the database, if they exist.
 function tryLoadCachedGames(steamId, callback) {
   async.waterfall(
     [
+      // Check that user with 'steamId' exists.
       (cb) => {
-        // Load user if they exist.
         Users.findOne({ id: steamId }).exec((err, user) => {
-          if (err) return cb(err);
+          if (err) return cb(err, null);
           cb(null, user);
         });
       },
+      // Load the user's owned games.
       (user, cb) => {
-        // Load game data for the user's owned games.
         Games.find()
-          .where("appid")
-          .in(user.ownedGameIds)
+          .where("appId")
+          .in(user.ownedGameIds) // NOTE: Relies on this being populated upon user creation!
           .exec((err, ownedGames) => {
             if (err) return cb(err);
             cb(null, ownedGames);
@@ -77,14 +76,13 @@ function tryLoadCachedGames(steamId, callback) {
 // Calls 'callback' with an array of games owned by the Steam user with id 'steamId'.
 // Uses the Steam API GetOwnedGames endpoint:
 // https://partner.steamgames.com/doc/webapi/IPlayerService#GetOwnedGames
-// If the endpoint returns an empty response, calls 'callback' with games queried from
-// cached game data, if possible.
-exports.getOwnedGames = async function (steamId, callback) {
-  // Note that the steamId must be a string (not a number) for the axios request to work.
+// If the endpoint returns an empty response and the caller passes true for 'allowCache',
+// then calls 'callback' with games queried from cached game data, if they exist.
+exports.getOwnedGames = async function (steamId, allowCache, callback) {
   const request = {
     url: endpoints.getOwnedGames,
     params: {
-      steamid: steamId,
+      steamid: steamId, // Must be a string (not number) for request to work.
       include_appinfo: true,
       include_played_free_games: true,
       format: "json",
@@ -93,12 +91,11 @@ exports.getOwnedGames = async function (steamId, callback) {
 
   axios(request)
     .then((res) => {
-      if (emptyResponse(res)) {
+      if (emptyResponse(res) && allowCache)
         return tryLoadCachedGames(steamId, callback);
-      }
+
       const games = res.data.response.games;
-      // Cache owned games for later use and pass to callback.
-      cacheGames(games);
+      cacheGames(games); // Cache owned games for later use and pass to callback.
       callback(null, games);
     })
     .catch((err) => {
