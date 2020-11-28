@@ -21,9 +21,13 @@ function emptyResponse(res) {
 
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
-  for (let game of games) {
-    Games.findOne({ appId: game.appid }, function (err) {
-      if (!err) return; // Game is already cached.
+  async.each(games, function (game) {
+    Games.findOne({ appId: game.appid }).exec((err, game) => {
+      if (err) {
+        return console.error(err);
+      }
+      if (game) return; // Already cached.
+
       let cacheGame = new Game(
         game.appid,
         game.name,
@@ -35,7 +39,7 @@ function cacheGames(games) {
         console.log(err);
       });
     });
-  }
+  });
 }
 
 function tryLoadCachedGames(steamId, callback) {
@@ -61,8 +65,11 @@ function tryLoadCachedGames(steamId, callback) {
     ],
     function (err, ownedGames) {
       // Pass owned games data to callback.
-      if (err) return console.log(err);
-      callback(ownedGames);
+      if (err) {
+        console.log(err);
+        return callback(err, null);
+      }
+      callback(null, ownedGames);
     }
   );
 }
@@ -92,9 +99,10 @@ exports.getOwnedGames = async function (steamId, callback) {
       const games = res.data.response.games;
       // Cache owned games for later use and pass to callback.
       cacheGames(games);
-      callback(games);
+      callback(null, games);
     })
     .catch((err) => {
       console.error(err);
+      callback(err, null);
     });
 };
