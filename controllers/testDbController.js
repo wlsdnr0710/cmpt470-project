@@ -1,10 +1,12 @@
 const GameList = require("../models/gameList");
 
-// Return index view.
+// Return index view. By default, the game lists are ordered by status.
 exports.index = function (req, res, next) {
-  GameList.find().exec((err, allGameLists) => {
+  GameList.model.find().exec((err, allGameLists) => {
     if (err) return next(err);
-    res.render("testDbIndex", { gameLists: allGameLists });
+    res.render("testDbIndex", {
+      gameLists: GameList.sort(allGameLists, GameList.SortFields.Status),
+    });
   });
 };
 
@@ -15,7 +17,7 @@ exports.createGet = function (req, res) {
 
 // Save a GameList to the db.
 exports.createPost = function (req, res, next) {
-  let gameList = new GameList({
+  let gameList = new GameList.model({
     title: req.body.title,
     description: req.body.description,
     creatorUsername: req.body.creatorUsername,
@@ -29,7 +31,7 @@ exports.createPost = function (req, res, next) {
 
 // Get details of a particular GameList.
 exports.details = function (req, res, next) {
-  GameList.findById(req.params.id).exec((err, foundGameList) => {
+  GameList.model.findById(req.params.id).exec((err, foundGameList) => {
     if (err) return next(err);
     res.render("testDbDetail", { gameList: foundGameList });
   });
@@ -38,7 +40,7 @@ exports.details = function (req, res, next) {
 // Adds the given gameId to the given GameList. If the caller relies on the
 // gameId being added to the game list, then it should await this method.
 exports.update = async function (gameId, gameListId) {
-  GameList.findById(gameListId).exec((err, gameList) => {
+  GameList.model.findById(gameListId).exec((err, gameList) => {
     if (err) return console.error(err);
     gameList.gameIds.push(gameId);
     gameList.save((err) => {
@@ -50,7 +52,7 @@ exports.update = async function (gameId, gameListId) {
 // Removes the given gameId to the given GameList. If the caller relies on the
 // gameId being added to the game list, then it should await this method.
 exports.remove = async function (gameId, gameListId) {
-  GameList.findById(gameListId).exec((err, gameList) => {
+  GameList.model.findById(gameListId).exec((err, gameList) => {
     if (err) return console.error(err);
     let index = gameList.gameIds.indexOf(gameId);
     if (index < 0)
