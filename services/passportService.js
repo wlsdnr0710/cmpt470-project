@@ -11,8 +11,8 @@ passport.serializeUser(function (steamId, done) {
     done(null, steamId);
 });
   
-passport.deserializeUser(function (steamid, done) {
-    User.findOne({ steamId: steamid }, function (err, user) {
+passport.deserializeUser(function (id, done) {
+    User.findOne({ steamId: id }, function (err, user) {
         done(err, user);
     });
     //done(null, obj);

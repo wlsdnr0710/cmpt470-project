@@ -15,7 +15,7 @@ exports.getPlayerSummaries = async function (user, callback) {
     url: endpoints.getPlayerSummaries,
     params: {
       key: apiKey,
-      steamids: user.id,
+      steamids: user.steamId,
       format: "json",
     },
   };

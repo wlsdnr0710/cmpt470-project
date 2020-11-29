@@ -4,20 +4,33 @@ block content
     div(class='container')
         section(id='profile-header')           
             div(class='profile-summary')
-                img(class='profile-avatar', src=`${user_avatar}`, style="border-radius: 50px;", alt=user.username, width="110", height="110")
-                h1(class='profile-name') #{user.username}
+                img(class='profile-avatar', src=`${user_avatar}`, style="border-radius: 50px;", alt=pageUser.username, width="110", height="110")
+                h1(class='profile-name') #{pageUser.username}
                 div(class='profile-stats')
                     ul(class='list-group list-group-horizontal', style='float: right;')
                         
                         li(class='list-group-item') Lists created: 
                         li(class='list-group-item') Lists completed:
                         li(class='list-group-item')
-                            a(href=`${user._id}/followers`)= "Followers:" 
-                            a= " " + user.followers.length
+                            a(href=`${pageUser._id}/followers`)= "Followers:" 
+                            a= " " + pageUser.followers.length
                         li(class='list-group-item')
-                            a(href=`${user._id}/following`)= "Following:"
-                            a= " " + user.following.length
+                            a(href=`${pageUser._id}/following`)= "Following:"
+                            a= " " + pageUser.following.length
+                if !isLoggedInUserPage 
+                    if loggedInUser.following.includes(`${pageUser._id}`)
+                        form(action='/userPage/unfollow', method='post')
+                            input(type='hidden', id='pageUserId', name='pageUserId',  value=`${pageUser._id}`)
+                            input(type='hidden', id='loggedInUserId', name='loggedInUserId',  value=`${loggedInUser._id}`)
+                            input(type='submit', class='btn btn-secondary', value="- UnFollow")
+                    else
+                        form(action='/userPage/follow', method='post')
+                            input(type='hidden', id='pageUserId', name='pageUserId',  value=`${pageUser._id}`)
+                            input(type='hidden', id='loggedInUserId', name='loggedInUserId',  value=`${loggedInUser._id}`)
+                            input(type='submit', class='btn btn-primary', value="+ Follow")
         h2= "Backlogs"
+        if isLoggedInUserPage
+            a(class="btn btn-primary", href='/glists/createform', id='createBacklogLink', role='button') Create Backlog List
         ul(class='ulRedirect')
             each gameList in gameLists
                 li(class='liRedirect')
@@ -25,6 +38,5 @@ block content
                         <h3> #{gameList.title} </h3>
                         each icon in gameList.icons
                             img(class='icon_img' src=icon)
-        if isLoggedInUserPage
-            a(href='/glists/createform' id='createBacklogLink') Create Backlog List
+        
 

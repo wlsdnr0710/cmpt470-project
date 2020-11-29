@@ -5,6 +5,7 @@ const User = require("../models/user");
 const GameList = require("../models/gameList");
 
 const steamApi = require("../services/steamApi");
+const user = require("../models/user");
 
 exports.redirectToLoggedInPage = function (req, res, next) {
   res.redirect('/userPage/' + req.user._id);
@@ -23,7 +24,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
   }
   var pageUserAvatar;
   await steamApi.getPlayerSummaries(pageUser, function (summary) {
-    pageUserAvatar = summary.avatar;
+    pageUserAvatar = summary.avatarfull;
     
   });
   
@@ -34,10 +35,10 @@ exports.renderUserPagebyId = async function (req, res, next) {
     "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
     authkey +
     "&steamid=" +
-    pageUser.id +
+    pageUser.steamId +
     "&include_appinfo=1&format=json";
   console.log("authkey: " + authkey);
-  console.log("user.id: " + pageUser.id);
+  console.log("user.steamId: " + pageUser.steamId);
   request.get(
     {
       url: profileGamesQuery,
@@ -116,10 +117,12 @@ exports.renderUserPagebyId = async function (req, res, next) {
         }
 
         console.log(gamesLists);
-        console.log("JHBFJSHDFJKSD: ", pageUserAvatar);
+        console.log("avatar url: ", pageUserAvatar);
         res.render("userPage", {
           title: pageUser.username + " | Steam Rolled",
-          user: pageUser,
+          user: req.user,
+          pageUser: pageUser,
+          loggedInUser: req.user,
           isLoggedInUserPage,
           gameLists: gamesLists,
           active: "profile",
