@@ -28,12 +28,22 @@ exports.create = function (req, res, next) {
 };
 
 // Updates an existing GameList in the db.
-exports.update = function (req, res, next) {};
+exports.update = function (req, res, next) {
+  let toFind = req.params.id;
+  let updatingTo = {
+    title: req.fields.title,
+    description: req.fields.description,
+  };
+
+  GameList.model.findOneAndUpdate(toFind, updatingTo, (err, updated) => {
+    if (err) return console.error(err);
+  });
+};
 
 // Deletes a GameList from the db.
 exports.delete = function (req, res, next) {
   GameList.model.findOneAndRemove({ _id: req.params.id }, (err, removed) => {
-    if (err) return console.log(err);
+    if (err) return console.error(err);
     res.redirect("/testdb");
   });
 };
