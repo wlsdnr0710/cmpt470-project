@@ -22,7 +22,7 @@ exports.createPost = function (req, res, next) {
   let gameList = new GameList.model({
     title: req.body.title,
     description: req.body.description,
-    creatorUsername: req.body.creatorUsername,
+    creatorSteamId: req.user.id,
   });
 
   gameList.save((err) => {
@@ -31,11 +31,10 @@ exports.createPost = function (req, res, next) {
   });
 };
 
-// Get details of a particular GameList.
+// Get details of a particular GameList whose id is passed as a query parameter.
 exports.details = function (req, res, next) {
   GameList.model.findById(req.params.id).exec((err, gameList) => {
     if (err) return next(err);
-    // TODO: req.user is undefined here. Something to do with express cookie, sessions, or passport?
     Steam.getOwnedGames(req.user.steamId, true, (err, allOwnedGames) => {
       if (err) return next(err);
 
@@ -48,8 +47,7 @@ exports.details = function (req, res, next) {
   });
 };
 
-// Adds the given gameId to the given GameList. If the caller relies on the
-// gameId being added to the game list, then it should await this method.
+// Adds the game with id 'gameId' to the game list with id 'gameListId'.
 exports.addGame = async function (gameId, gameListId) {
   GameList.model.findById(gameListId).exec((err, gameList) => {
     if (err) return console.error(err);
@@ -60,8 +58,7 @@ exports.addGame = async function (gameId, gameListId) {
   });
 };
 
-// Removes the given gameId to the given GameList. If the caller relies on the
-// gameId being added to the game list, then it should await this method.
+// Removes the game with id 'gameId' from the game list with id 'gameListId'.
 exports.removeGame = async function (gameId, gameListId) {
   GameList.model.findById(gameListId).exec((err, gameList) => {
     if (err) return console.error(err);
