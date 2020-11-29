@@ -1,15 +1,25 @@
 extends layout
 
 block content
-  h1 "Gamelist Details"
-  h2 "Crerator : " + #{creator}
+  h1 Details
+  h2 #{title}  
+  h3 by #{creator}
+  p description : #{description}
+
   ul
-  each game in games
+  each game in info
     li
       h1 #{game.name}
       img(src=game.image)
       p #{game.short_description}
-      p #{game.price_original} -> #{game.price_discounted}
+      if game.isFree
+        p Free Game
+      else
+        if game.discount === 0
+          p #{game.price}
+        else
+          p #{game.price} - On Sale : #{game.discount}%
+      p #{game.creatorPlaytime} hours played by author.
   else
     li "No Game Lists"
 
