@@ -46,6 +46,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(formidable());
+
 app.use("/", indexRouter);
 app.use("/search", searchRouter);
 app.use("/login", loginRouter);
