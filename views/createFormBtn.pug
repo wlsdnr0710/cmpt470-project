@@ -6,23 +6,25 @@ block createFormBtn
         data-toggle="modal"
         data-target="#gameListCreateForm") Create game list
 
-        div(class="modal fade"
-            id="gameListCreateForm"
-            aria-hidden="true")
-            div(class="modal-dialog modal-dialog-centered" role="document")
-                div(class="modal-content")
-                    div(class="modal-header")
-                        h5(class="modal-title") New Game List
-                        button(type="button" class="close" data-dismiss="modal")
-                            span(aria-hidden="true") &times;
-                    div(class="modal-body")
-                        form(id='createForm')
-                            div(class='form-group')
-                                label(for='gameListName' class='col-form-label') Name
-                                input(type='text' class='form-control' name='title' id='gameListName' placeholder='e.g. Cozy City Builders' required)
-                            div(class='form-group')
-                                label(for='gameListDesc' class='col-form-label') Description
-                                textarea(id='gameListDesc' name='description' class='form-control' placeholder='e.g. City builders for gloomy days' required)
-                    div(class="modal-footer")
-                        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
-                        input(type="submit" class="btn btn-primary" id="createFormSubmit" form='createForm')
+    div(class="modal fade"
+        id="gameListCreateForm"
+        aria-hidden="true")
+        div(class="modal-dialog modal-dialog-centered" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title") New Game List
+                    button(type="button" class="close" data-dismiss="modal")
+                        span(aria-hidden="true") &times;
+                div(class="modal-body")
+                    form(id='createForm')
+                        div(class='form-group')
+                            label(for='gameListName' class='col-form-label') Name
+                            input(type='text' class='form-control' name='title' id='gameListName' placeholder='e.g. Cozy City Builders' required)
+                        div(class='form-group')
+                            label(for='gameListDesc' class='col-form-label') Description
+                            textarea(id='gameListDesc' name='description' class='form-control' placeholder='e.g. City builders for gloomy days' required)
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+                    input(type="submit" class="btn btn-primary" id="createFormSubmit" form='createForm')
+
+    script(src='/scripts/gameListUpdate.js')

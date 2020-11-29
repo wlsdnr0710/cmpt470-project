@@ -22,7 +22,7 @@ const GameListSchema = Schema({
 });
 
 // Note: get does not work with an arrow function.
-GameListSchema.virtual("testUrl").get(function () {
+GameListSchema.virtual("testDetailsUrl").get(function () {
   return "/testdb/details/" + this._id;
 });
 
