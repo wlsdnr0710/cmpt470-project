@@ -8,9 +8,8 @@ const passport = require("passport");
 const session = require("express-session");
 
 const passportService = require('./services/passportService');
-
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const searchRouter = require("./routes/search");
 const testDbRouter = require("./routes/testDb");
 const glistsRouter = require("./routes/glists");
 const gameDetail = require("./routes/gameDetail");
@@ -48,7 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/search", searchRouter);
 app.use("/login", loginRouter);
 app.use("/testdb", testDbRouter);
 app.use("/glists", glistsRouter);
