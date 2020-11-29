@@ -6,7 +6,6 @@ const apiTest = require("../services/steamApi");
 
 router.get("/", testDbController.index);
 
-router.get("/create", testDbController.createGet);
 router.post("/create", testDbController.createPost);
 
 router.get("/details/:id", testDbController.details);

@@ -11,11 +11,6 @@ exports.index = function (req, res, next) {
   });
 };
 
-// Get the GameList creation page.
-exports.createGet = function (req, res) {
-  res.render("testDbCreateList");
-};
-
 // Save a GameList to the db.
 exports.createPost = function (req, res, next) {
   let gameList = new GameList.model({
@@ -31,6 +26,9 @@ exports.createPost = function (req, res, next) {
     res.send("success");
   });
 };
+
+// Deletes a GameList from the db.
+exports.deletePost = function (req, res, next) {};
 
 // Get details of a particular GameList whose id is passed as a query parameter.
 exports.details = function (req, res, next) {
