@@ -5,6 +5,7 @@ const User = require("../models/user");
 const GameList = require("../models/gameList");
 
 const steamApi = require("../services/steamApi");
+const user = require("../models/user");
 
 exports.redirectToLoggedInPage = function (req, res, next) {
   res.redirect("/userPage/" + req.user._id);
@@ -20,7 +21,12 @@ exports.renderUserPagebyId = async function (req, res, next) {
     isLoggedInUserPage = false;
     console.log("found user", pageUser);
   }
-
+  var pageUserAvatar;
+  await steamApi.getPlayerSummaries(pageUser, function (summary) {
+    pageUserAvatar = summary.avatarfull;
+    
+  });
+  
   var gamesinfo = {};
   // http://store.steampowered.com/api/appdetails/appids=
   var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
@@ -31,7 +37,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
     pageUser.steamId +
     "&include_appinfo=1&format=json";
   console.log("authkey: " + authkey);
-  console.log("user.id: " + pageUser.id);
+  console.log("user.steamId: " + pageUser.steamId);
   request.get(
     {
       url: profileGamesQuery,
@@ -114,17 +120,20 @@ exports.renderUserPagebyId = async function (req, res, next) {
               "/gameDetail/" + pageUser.gameListIds[i];
           }
 
-          console.log(gamesLists);
-          res.render("userPage", {
-            title: pageUser.username + " | Steam Rolled",
-            user: pageUser,
-            isLoggedInUserPage,
-            gameLists: gamesLists,
-          });
-        }
-      );
-    }
-  );
+        console.log(gamesLists);
+        console.log("avatar url: ", pageUserAvatar);
+        res.render("userPage", {
+          title: pageUser.username + " | Steam Rolled",
+          user: req.user,
+          pageUser: pageUser,
+          loggedInUser: req.user,
+          isLoggedInUserPage,
+          gameLists: gamesLists,
+          active: "profile",
+          user_avatar: pageUserAvatar
+        });
+      });
+    });
 };
 
 exports.renderFollowersPage = async function (req, res, next) {

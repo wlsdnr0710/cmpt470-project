@@ -10,12 +10,12 @@ router.get('/', function (req, res, next) {
     res.redirect('/userPage');
   }
 
-  res.render('login', {user: req.user });
+  res.render('login', { active: 'login' });
 })
 
 router.get('/logout', function(req, res){
-req.logout();
-res.redirect('/login');
+  req.logout();
+  res.redirect('/login');
 })
 
 router.get('/steam', userController.login);
