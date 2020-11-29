@@ -7,15 +7,14 @@ const GameList = require("../models/gameList");
 const steamApi = require("../services/steamApi");
 
 exports.redirectToLoggedInPage = function (req, res, next) {
-  res.redirect('/userPage/' + req.user._id);
+  res.redirect("/userPage/" + req.user._id);
 };
 
 exports.renderUserPagebyId = async function (req, res, next) {
   // assume page of logged in user
   var pageUser = req.user;
   var isLoggedInUserPage = true;
-  if (req.user._id != req.params.id)
-  {
+  if (req.user._id != req.params.id) {
     // assumption incorrect, page is not of logged in user
     pageUser = await User.findById(req.params.id);
     isLoggedInUserPage = false;
@@ -29,7 +28,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
     "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
     authkey +
     "&steamid=" +
-    pageUser.id +
+    pageUser.steamId +
     "&include_appinfo=1&format=json";
   console.log("authkey: " + authkey);
   console.log("user.id: " + pageUser.id);
@@ -43,10 +42,12 @@ exports.renderUserPagebyId = async function (req, res, next) {
       console.log("err: ", err);
       console.log("resp: ", resp);
       console.log("data: ", data);
-      console.log("response of request, num of games: ", data.response.game_count);
+      console.log(
+        "response of request, num of games: ",
+        data.response.game_count
+      );
       // for each game in user library
-      for (var i = 0; i < data.response.game_count; i++)
-      {
+      for (var i = 0; i < data.response.game_count; i++) {
         // get various information about the game
         var gameid = data.response.games[i].appid;
         var gameinfo = {
@@ -66,68 +67,71 @@ exports.renderUserPagebyId = async function (req, res, next) {
       // Get ids all game lists user has created
       var userGameLists = new Array(pageUser.gameListIds.length);
       // for each game list, get the game ids within the list
-      async.forEach(pageUser.gameListIds, function(gameListIdString, done)
-      {
-        console.log("gamelistid: ", gameListIdString);
-        GameList.findById(gameListIdString).exec((err2, foundGameList) => {
-          console.log("finding game ids for list");
-          if (!err2) {
-            console.log("found");
-            // retrieve and store the found game ids
-            // retain order of game lists as it is from the database
-            //  so that they are displayed in the same order every time
-            userGameLists[pageUser.gameListIds.indexOf(gameListIdString)] = foundGameList;
+      async.forEach(
+        pageUser.gameListIds,
+        function (gameListIdString, done) {
+          console.log("gamelistid: ", gameListIdString);
+          GameList.model
+            .findById(gameListIdString)
+            .exec((err2, foundGameList) => {
+              console.log("finding game ids for list");
+              if (!err2) {
+                console.log("found");
+                // retrieve and store the found game ids
+                // retain order of game lists as it is from the database
+                //  so that they are displayed in the same order every time
+                userGameLists[
+                  pageUser.gameListIds.indexOf(gameListIdString)
+                ] = foundGameList;
+              }
+              done();
+            });
+        },
+        function (async_err) {
+          if (async_err) {
+            next(async_err);
           }
-          done();
-        });
-      },
-      function(async_err)
-      {
-        if (async_err) {
-          next(async_err);
-        }
-        
-        userGameLists = userGameLists.filter(function(ids){
-          return ids != undefined;
-        });
-        
-        var gamesLists = [];
-        // for each game lists (which only have game ids so far)
-        // get information about each game from the previously defined dictionary
-        for (var i = 0; i < userGameLists.length; i++) 
-        {
-          var gameIDsList = userGameLists[i].gameIds;
-          console.log("list: ", gameIDsList);
-          gamesLists.push({title: userGameLists[i].title});
-          
-          icon_urls = [];
-          for(var j = 0; j < gameIDsList.length; j++) 
-          {
-            icon_urls.push(gamesinfo[gameIDsList[j]].icon_url);
-            console.log("icon url: ", gamesinfo[gameIDsList[j]].icon_url);
-          }
-          gamesLists[gamesLists.length -1].icons = icon_urls;
-          gamesLists[gamesLists.length -1].gameDetailsUrl = "/gameDetail/" + pageUser.gameListIds[i];
-        }
 
-        console.log(gamesLists);
-        res.render("userPage", {
-          title: pageUser.username + " | Steam Rolled",
-          user: pageUser,
-          isLoggedInUserPage,
-          gameLists: gamesLists,
-        });
-      });
-    });
+          userGameLists = userGameLists.filter(function (ids) {
+            return ids != undefined;
+          });
+
+          var gamesLists = [];
+          // for each game lists (which only have game ids so far)
+          // get information about each game from the previously defined dictionary
+          for (var i = 0; i < userGameLists.length; i++) {
+            var gameIDsList = userGameLists[i].gameIds;
+            console.log("list: ", gameIDsList);
+            gamesLists.push({ title: userGameLists[i].title });
+
+            icon_urls = [];
+            for (var j = 0; j < gameIDsList.length; j++) {
+              icon_urls.push(gamesinfo[gameIDsList[j]].icon_url);
+              console.log("icon url: ", gamesinfo[gameIDsList[j]].icon_url);
+            }
+            gamesLists[gamesLists.length - 1].icons = icon_urls;
+            gamesLists[gamesLists.length - 1].gameDetailsUrl =
+              "/gameDetail/" + pageUser.gameListIds[i];
+          }
+
+          console.log(gamesLists);
+          res.render("userPage", {
+            title: pageUser.username + " | Steam Rolled",
+            user: pageUser,
+            isLoggedInUserPage,
+            gameLists: gamesLists,
+          });
+        }
+      );
+    }
+  );
 };
 
 exports.renderFollowersPage = async function (req, res, next) {
-
   // assume page of logged in user
   var pageUser = req.user;
   var isLoggedInUserPage = true;
-  if (req.user._id != req.params.id)
-  {
+  if (req.user._id != req.params.id) {
     // assumption incorrect, page is not of logged in user
     pageUser = await User.findById(req.params.id);
     isLoggedInUserPage = false;
@@ -144,8 +148,11 @@ exports.renderFollowersPage = async function (req, res, next) {
 
   console.log("follower users,", follower_users);
   followers_info = new Array(pageUser.followers.length);
-  for (var follower_ind = 0; follower_ind < pageUser.followers.length; follower_ind++)
-  {
+  for (
+    var follower_ind = 0;
+    follower_ind < pageUser.followers.length;
+    follower_ind++
+  ) {
     var user = follower_users[follower_ind];
     await steamApi.getPlayerSummaries(user, function (summary) {
       console.log(summary);
@@ -171,8 +178,7 @@ exports.renderFollowingPage = async function (req, res, next) {
   // assume page of logged in user
   var pageUser = req.user;
   var isLoggedInUserPage = true;
-  if (req.user._id != req.params.id)
-  {
+  if (req.user._id != req.params.id) {
     // assumption incorrect, page is not of logged in user
     pageUser = await User.findById(req.params.id);
     isLoggedInUserPage = false;
@@ -189,32 +195,34 @@ exports.renderFollowingPage = async function (req, res, next) {
 
   console.log("following users,", following_users);
   following_info = new Array(pageUser.following.length);
-  async.forEach(pageUser.following, async function (following_id, done) {
-    following_ind = pageUser.following.indexOf(following_id);
-    var user = following_users[following_ind];
-    await steamApi.getPlayerSummaries(user, function (summary) {
-      console.log(summary);
-      // get name and avatar
-      following_info[following_ind] = {
-        personaname: summary.personaname,
-        avatar: summary.avatar,
-        pageUrl: "/userPage/" + following_id,
-      };
-    });
-    done();
-  },
-  function (async_err) {
-    if (async_err)
-    {
-      console.log("Could not retrieve following info", async_err);
-    }
+  async.forEach(
+    pageUser.following,
+    async function (following_id, done) {
+      following_ind = pageUser.following.indexOf(following_id);
+      var user = following_users[following_ind];
+      await steamApi.getPlayerSummaries(user, function (summary) {
+        console.log(summary);
+        // get name and avatar
+        following_info[following_ind] = {
+          personaname: summary.personaname,
+          avatar: summary.avatar,
+          pageUrl: "/userPage/" + following_id,
+        };
+      });
+      done();
+    },
+    function (async_err) {
+      if (async_err) {
+        console.log("Could not retrieve following info", async_err);
+      }
 
-    console.log("got info for all following,", following_info);
-    res.render("following", {
-      title: pageUser.username + " | Steam Rolled",
-      user: pageUser,
-      isLoggedInUserPage,
-      allFollowed: following_info,
-    });
-  });
+      console.log("got info for all following,", following_info);
+      res.render("following", {
+        title: pageUser.username + " | Steam Rolled",
+        user: pageUser,
+        isLoggedInUserPage,
+        allFollowed: following_info,
+      });
+    }
+  );
 };
