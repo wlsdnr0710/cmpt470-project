@@ -1,0 +1,16 @@
+nav(class='navbar navbar-expand-lg navbar-dark bg-dark')
+    a(class='navbar-brand', href="/") Steam Rolled
+    div(class="collapse navbar-collapse", id="navbarSupportedContent")
+        ul(class='navbar-nav mr-auto')
+            li(class='nav-item')
+                a(class=(active=='home') ? 'nav-link active' : 'nav-link', href='/') Home
+            if user
+                li(class='nav-item')
+                    a(class=(active=='profile') ? 'nav-link active' : 'nav-link', href='/userPage') #{user.username}
+                li(class='nav-item')
+                    a(class='nav-link', href='/login/logout') Logout
+            else
+                li(class='nav-item')
+                    a(class=(active=='login') ? 'nav-link active' : 'nav-link', href='/login') Login
+            li(class="nav-item my-2 my-lg-0")
+                a(class=(active=='search') ? 'nav-link active' : 'nav-link', href='/search') Search

@@ -114,6 +114,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
           user: pageUser,
           isLoggedInUserPage,
           gameLists: gamesLists,
+          active: "profile"
         });
       });
     });

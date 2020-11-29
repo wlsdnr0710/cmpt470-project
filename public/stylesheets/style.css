@@ -3,6 +3,39 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+#profile-header {
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+.container {
+  margin-top: 50px;
+}
+
+.profile-name {
+  padding-left: 120px;
+  margin-right: 1.92307692rem;
+  max-width: 100%;
+  margin-top: 25px;
+  /* display: flex; */
+}
+.profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
+  justify-content: center;
+  margin-bottom: 25px;
+  min-height: 100px;
+  position: relative;
+}
+.profile-avatar {
+  position: absolute;
+  top: 0;
+  left: .38461538rem;
+}
+.profile-stats {
+  padding-right: 5px;
+  /* padding-left: auto; */
+}
 a {
   color: #00B7FF;
   text-decoration: none;

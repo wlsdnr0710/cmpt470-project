@@ -1,16 +1,30 @@
 extends layout
-
 block content
-    h1= user.username
-
-    h2= "Backlogs"
-    ul(class='ulRedirect')
-        each gameList in gameLists
-            li(class='liRedirect')
-                a(href=gameList.gameDetailsUrl) 
-                    <h3> #{gameList.title} </h3>
-                    each icon in gameList.icons
-                        img(class='icon_img' src=icon)
-    if isLoggedInUserPage
-        a(href='/glists/createform' id='createBacklogLink') Create Backlog List
+    include nav.pug
+    div(class='container')
+        section(id='profile-header')           
+            div(class='profile-summary')
+                img(class='profile-avatar', src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/a1/a13a4ce35763c32a3ecf99a72297bc942b9b6634.jpg", style="border-radius: 50px;", alt=user.username, width="110", height="110")
+                h1(class='profile-name') #{user.username}
+                div(class='profile-stats')
+                    ul(class='list-group list-group-horizontal', style='float: right;')
+                        
+                        li(class='list-group-item') Lists created: 
+                        li(class='list-group-item') Lists completed:
+                        li(class='list-group-item')
+                            a(href=`${user._id}/followers`)= "Followers:" 
+                            a= " " + user.followers.length
+                        li(class='list-group-item')
+                            a(href=`${user._id}/following`)= "Following:"
+                            a= " " + user.following.length
+        h2= "Backlogs"
+        ul(class='ulRedirect')
+            each gameList in gameLists
+                li(class='liRedirect')
+                    a(href=gameList.gameDetailsUrl) 
+                        <h3> #{gameList.title} </h3>
+                        each icon in gameList.icons
+                            img(class='icon_img' src=icon)
+        if isLoggedInUserPage
+            a(href='/glists/createform' id='createBacklogLink') Create Backlog List
 

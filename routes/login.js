@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
     res.redirect('/userPage');
   }
 
-  res.render('login', {user: req.user });
+  res.render('login', { active: 'login' });
 })
 
 router.get('/logout', function(req, res){
