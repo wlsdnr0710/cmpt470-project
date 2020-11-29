@@ -5,7 +5,7 @@ block content
         h1 User's created game lists
 
         button(type="button"
-            class="btn btn-primary mb-3"
+            class="btn btn-success mb-3"
             data-toggle="modal"
             data-target="#gameListCreateForm") Create game list
 
@@ -30,13 +30,15 @@ block content
                         button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                         input(type="submit" class="btn btn-primary" id="createFormSubmit" form='createForm')
 
-        div(class="list-group")
+        ul(class="list-group")
             each gameList in gameLists
-                a(class="list-group-item list-group-item-action float-left"
-                    href=gameList.testUrl) #{gameList.title}
-                    span(class="badge badge-primary badge-pill float-right ml-3") #{gameList.gameIds.length}
-                    span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
-                    span(class="badge badge-secondary badge-pill float-right ml-3") #{gameList.printDateCreated}
+                li(class='d-flex flex-row')
+                    a(class="list-group-item list-group-item-action float-left w-75" href=gameList.testUrl) #{gameList.title}
+                        span(class="badge badge-primary badge-pill float-right ml-3") Games: #{gameList.gameIds.length}
+                        span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
+                        span(class="badge badge-secondary badge-pill float-right ml-3") Created: #{gameList.printDateCreated}
+                    a(class="btn btn-danger float-right ml-1" href="/testdb/delete/" + gameList._id)
+                        i(class="fa fa-trash")
             else
                 p This user doesn't have any game lists.
 

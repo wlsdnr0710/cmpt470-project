@@ -1,5 +1,5 @@
-const Games = require("../models/game");
-const Users = require("../models/user");
+const Game = require("../models/game");
+const User = require("../models/user");
 const axios = require("axios").default;
 const async = require("async");
 
@@ -22,7 +22,7 @@ function emptyResponse(res) {
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
   async.each(games, (game) => {
-    Games.findOne({ appId: game.appid }).exec((err, game) => {
+    Game.findOne({ appId: game.appid }).exec((err, game) => {
       if (err) return console.error(err);
       if (game) return; // Already cached.
 
@@ -46,14 +46,14 @@ function tryLoadCachedGames(steamId, callback) {
     [
       // Check that user with 'steamId' exists.
       (cb) => {
-        Users.findOne({ id: steamId }).exec((err, user) => {
+        User.findOne({ id: steamId }).exec((err, user) => {
           if (err) return cb(err, null);
           cb(null, user);
         });
       },
       // Load the user's owned games.
       (user, cb) => {
-        Games.find()
+        Game.find()
           .where("appId")
           .in(user.ownedGameIds) // NOTE: Relies on this being populated upon user creation!
           .exec((err, ownedGames) => {
@@ -92,6 +92,7 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
   axios(request)
     .then((res) => {
       if (emptyResponse(res) && allowCache)
+        // TODO: Handle 429 error as well
         return tryLoadCachedGames(steamId, callback);
 
       const games = res.data.response.games;

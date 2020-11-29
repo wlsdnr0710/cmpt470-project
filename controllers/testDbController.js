@@ -12,7 +12,7 @@ exports.index = function (req, res, next) {
 };
 
 // Save a GameList to the db.
-exports.createPost = function (req, res, next) {
+exports.create = function (req, res, next) {
   let gameList = new GameList.model({
     title: req.fields.title,
     description: req.fields.description,
@@ -28,7 +28,12 @@ exports.createPost = function (req, res, next) {
 };
 
 // Deletes a GameList from the db.
-exports.deletePost = function (req, res, next) {};
+exports.delete = function (req, res, next) {
+  GameList.model.findOneAndRemove({ _id: req.params.id }, (err, removed) => {
+    if (err) return console.log(err);
+    res.redirect("/testdb");
+  });
+};
 
 // Get details of a particular GameList whose id is passed as a query parameter.
 exports.details = function (req, res, next) {

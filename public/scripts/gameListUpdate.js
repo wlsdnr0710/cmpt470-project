@@ -13,3 +13,5 @@ async function initCreateFormHandler() {
     console.log(result);
   };
 }
+
+// TODO: Add handlers for adding/removing games, deleting game list

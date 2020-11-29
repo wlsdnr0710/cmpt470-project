@@ -6,7 +6,10 @@ const apiTest = require("../services/steamApi");
 
 router.get("/", testDbController.index);
 
-router.post("/create", testDbController.createPost);
+router.post("/create", testDbController.create);
+
+// Note: deletes on GET, which makes it easier to use with anchor tags and href.
+router.get("/delete/:id", testDbController.delete);
 
 router.get("/details/:id", testDbController.details);
 
