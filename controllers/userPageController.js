@@ -4,6 +4,8 @@ const async = require("async");
 const User = require("../models/user");
 const GameList = require("../models/gameList");
 
+const steamApi = require("../services/steamApi");
+
 exports.redirectToLoggedInPage = function (req, res, next) {
   res.redirect('/userPage/' + req.user._id);
 };
@@ -142,50 +144,26 @@ exports.renderFollowersPage = async function (req, res, next) {
 
   console.log("follower users,", follower_users);
   followers_info = new Array(pageUser.followers.length);
-  async.forEach(pageUser.followers, function (follower_id, done) {
-    var user = follower_users[pageUser.followers.indexOf(follower_id)];
-    //http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=XXXXXXXXXXXXXXXXXXXXXXX&steamids=76561197960435530
-    var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
-    var profileQuery =
-    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
-    authkey +
-    "&steamids=" +
-    user.id;
-    console.log("authkey: " + authkey);
-    console.log("id: " + user.id);
-    request.get(
-    {
-      url: profileQuery,
-      json: true,
-      headers: { "User-Agent": "request" },
-    },
-    function (err, resp, data) {
-      if (!err)
-      {
-         console.log(data.response);
-        // get name and avatar
-        followers_info[pageUser.followers.indexOf(follower_id)] = {
-          personaname: data.response.players[0].personaname,
-          avatar: data.response.players[0].avatar,
-          pageUrl: "/userPage/" + follower_id
-        };
-      }
-      done();
+  for (var follower_ind = 0; follower_ind < pageUser.followers.length; follower_ind++)
+  {
+    var user = follower_users[follower_ind];
+    await steamApi.getPlayerSummaries(user, function (summary) {
+      console.log(summary);
+      // get name and avatar
+      followers_info[follower_ind] = {
+        personaname: summary.personaname,
+        avatar: summary.avatar,
+        pageUrl: "/userPage/" + pageUser.followers[follower_ind],
+      };
     });
-  },
-  function (async_err) {
-    if (async_err)
-    {
-      console.log("Could not retrieve follower info", async_err);
-    }
+  }
 
-    console.log("got info for all followers,", followers_info);
-    res.render("followers", {
-      title: pageUser.username + " | Steam Rolled",
-      user: pageUser,
-      isLoggedInUserPage,
-      followers: followers_info,
-    });
+  console.log("got info for all followers,", followers_info);
+  res.render("followers", {
+    title: pageUser.username + " | Steam Rolled",
+    user: pageUser,
+    isLoggedInUserPage,
+    followers: followers_info,
   });
 };
 
@@ -211,36 +189,19 @@ exports.renderFollowingPage = async function (req, res, next) {
 
   console.log("following users,", following_users);
   following_info = new Array(pageUser.following.length);
-  async.forEach(pageUser.following, function (following_id, done) {
-    var user = following_users[pageUser.following.indexOf(following_id)];
-    //http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=XXXXXXXXXXXXXXXXXXXXXXX&steamids=76561197960435530
-    var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
-    var profileQuery =
-    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
-    authkey +
-    "&steamids=" +
-    user.id;
-    console.log("authkey: " + authkey);
-    console.log("id: " + user.id);
-    request.get(
-    {
-      url: profileQuery,
-      json: true,
-      headers: { "User-Agent": "request" },
-    },
-    function (err, resp, data) {
-      if (!err)
-      {
-         console.log(data.response);
-        // get name and avatar
-        following_info[pageUser.following.indexOf(following_id)] = {
-          personaname: data.response.players[0].personaname,
-          avatar: data.response.players[0].avatar,
-          pageUrl: "/userPage/" + following_id
-        };
-      }
-      done();
+  async.forEach(pageUser.following, async function (following_id, done) {
+    following_ind = pageUser.following.indexOf(following_id);
+    var user = following_users[following_ind];
+    await steamApi.getPlayerSummaries(user, function (summary) {
+      console.log(summary);
+      // get name and avatar
+      following_info[following_ind] = {
+        personaname: summary.personaname,
+        avatar: summary.avatar,
+        pageUrl: "/userPage/" + following_id,
+      };
     });
+    done();
   },
   function (async_err) {
     if (async_err)
