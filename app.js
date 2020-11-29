@@ -6,55 +6,8 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
-const SteamStrategy = require("passport-steam").Strategy;
-const fs = require("fs");
 
-var User = require("./models/user");
-//grab steam key
-try {
-  var steamkey = fs.readFileSync("./token.txt", "utf8");
-} catch (err) {
-  console.error(err);
-}
-//passport for persistent login sessions
-passport.serializeUser(function (id, done) {
-  done(null, id);
-});
-
-passport.deserializeUser(function (steamid, done) {
-  User.findOne({ id: steamid }, function (err, user) {
-    done(err, user);
-  });
-  //done(null, obj);
-});
-
-passport.use(
-  new SteamStrategy(
-    {
-      //i believe this will need to be changed to the domain URL where our site is deployed
-      returnURL: "http://localhost:3000/login/steam",
-      realm: "http://localhost:3000/",
-      apiKey: steamkey,
-    },
-    function (identifier, profile, done) {
-      process.nextTick(function () {
-        profile.identifier = identifier;
-        User.findOne({ id: profile.id }, function (err, doc) {
-          if (err) return console.log(err);
-          //user exists
-          if (doc) return done(null, profile.id);
-          User.create(
-            { id: profile.id, username: profile.displayName },
-            function (err, user) {
-              if (err) return handleError(err);
-            }
-          );
-          return done(null, profile.id);
-        });
-      });
-    }
-  )
-);
+const passportService = require('./services/passportService');
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");

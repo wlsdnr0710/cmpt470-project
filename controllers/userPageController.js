@@ -21,7 +21,12 @@ exports.renderUserPagebyId = async function (req, res, next) {
     isLoggedInUserPage = false;
     console.log("found user", pageUser);
   }
-
+  var pageUserAvatar;
+  await steamApi.getPlayerSummaries(pageUser, function (summary) {
+    pageUserAvatar = summary.avatar;
+    
+  });
+  
   var gamesinfo = {};
   // http://store.steampowered.com/api/appdetails/appids=
   var authkey = "E8E95B7D362F3A6D263CBDFB6F694293";
@@ -111,12 +116,14 @@ exports.renderUserPagebyId = async function (req, res, next) {
         }
 
         console.log(gamesLists);
+        console.log("JHBFJSHDFJKSD: ", pageUserAvatar);
         res.render("userPage", {
           title: pageUser.username + " | Steam Rolled",
           user: pageUser,
           isLoggedInUserPage,
           gameLists: gamesLists,
-          active: "profile"
+          active: "profile",
+          user_avatar: pageUserAvatar
         });
       });
     });

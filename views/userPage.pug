@@ -4,7 +4,7 @@ block content
     div(class='container')
         section(id='profile-header')           
             div(class='profile-summary')
-                img(class='profile-avatar', src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/a1/a13a4ce35763c32a3ecf99a72297bc942b9b6634.jpg", style="border-radius: 50px;", alt=user.username, width="110", height="110")
+                img(class='profile-avatar', src=`${user_avatar}`, style="border-radius: 50px;", alt=user.username, width="110", height="110")
                 h1(class='profile-name') #{user.username}
                 div(class='profile-stats')
                     ul(class='list-group list-group-horizontal', style='float: right;')
