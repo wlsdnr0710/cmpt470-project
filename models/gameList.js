@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const Status = {
   Active: "ACTIVE",
   Completed: "COMPLETED",
+  Awaiting: "AWAITING",
   Dropped: "DROPPED",
 };
 
@@ -13,7 +14,11 @@ const GameListSchema = Schema({
   creatorSteamId: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
   gameIds: { type: [Number] }, // Steam game appids
-  status: { type: String, enum: Object.values(Status) },
+  status: {
+    type: String,
+    enum: Object.values(Status),
+    default: Status.Awaiting,
+  },
 });
 
 // Note: get does not work with an arrow function.
@@ -50,8 +55,8 @@ function statusComparator(listA, listB) {
   let statuses = Object.values(Status);
   if (!listA.status && !listB.status) return 0;
 
-  let posA = statuses.findIndex(listA.status);
-  let posB = statuses.findIndex(listB.status);
+  let posA = statuses.findIndex((status) => status === listA.status);
+  let posB = statuses.findIndex((status) => status === listB.status);
   return posA - posB;
 }
 
@@ -65,8 +70,8 @@ const SortFields = {
 
 // Sorts game lists by a field in place. Field options are specified in
 // the 'SortFields' object in the import (e.g. GameList.SortFields.Status).
-function sort(gameLists, byField) {
-  switch (byField) {
+function sort(gameLists, onField) {
+  switch (onField) {
     case SortFields.Title:
       return;
     case SortFields.CreatedDate:

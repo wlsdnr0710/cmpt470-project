@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Schema to hold Steam game information. Only used when the GetOwnedGames
-// API endpoint returns an empty response.
+// Schema to hold Steam game information.
 const GameSchema = Schema({
   appId: { type: Number, required: true },
   name: { type: String, required: true },
