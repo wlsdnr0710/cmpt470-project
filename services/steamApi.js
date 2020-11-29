@@ -21,22 +21,24 @@ function emptyResponse(res) {
 
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
-  async.each(games, (game) => {
-    Game.findOne({ appId: game.appid }).exec((err, game) => {
+  for (game of games) {
+    Game.findOne({ appId: game.appid }, (err, found) => {
       if (err) return console.error(err);
-      if (game) return; // Already cached.
+      if (found) return; // Already cached.
 
-      let cacheGame = new Game(
-        game.appid,
-        game.name,
-        game.playtime_forever,
-        game.img_icon_url,
-        game.img_logo_url
-      );
+      let cacheGame = new Game({
+        appId: game.appid,
+        name: game.name,
+        playtimeForever: game.playtime_forever,
+        imgIconUrl: game.img_icon_url,
+        imgLogoUrl: game.img_logo_url,
+      });
 
-      cacheGame.save((err) => console.log(err));
+      cacheGame.save((err) => {
+        if (err) console.error(err);
+      });
     });
-  });
+  }
 }
 
 // Loads the owned games from the user with id 'steamId' from
