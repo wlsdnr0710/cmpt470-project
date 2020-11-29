@@ -8,6 +8,7 @@ const passport = require("passport");
 const session = require("express-session");
 const SteamStrategy = require("passport-steam").Strategy;
 const fs = require("fs");
+const formidable = require("express-formidable");
 
 var User = require("./models/user");
 //grab steam key
@@ -93,6 +94,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(formidable());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

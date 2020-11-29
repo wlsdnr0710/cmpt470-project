@@ -19,16 +19,16 @@ block content
                         button(type="button" class="close" data-dismiss="modal")
                             span(aria-hidden="true") &times;
                     div(class="modal-body")
-                        form(method='post')
+                        form(id='createForm')
                             div(class='form-group')
                                 label(for='gameListName' class='col-form-label') Name
-                                input(type='text' class='form-control' id='gameListName' placeholder='e.g. Cozy City Builders')
+                                input(type='text' class='form-control' name='title' id='gameListName' placeholder='e.g. Cozy City Builders' required)
                             div(class='form-group')
                                 label(for='gameListDesc' class='col-form-label') Description
-                                textarea(id='gameListDesc' class='form-control' placeholder='e.g. City builders for gloomy days')
+                                textarea(id='gameListDesc' name='description' class='form-control' placeholder='e.g. City builders for gloomy days' required)
                     div(class="modal-footer")
-                        button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
-                        button(type="button" class="btn btn-primary") Submit
+                        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+                        input(type="submit" class="btn btn-primary" id="createFormSubmit" form='createForm')
 
         div(class="list-group")
             each gameList in gameLists
@@ -39,3 +39,5 @@ block content
                     span(class="badge badge-secondary badge-pill float-right ml-3") #{gameList.printDateCreated}
             else
                 p This user doesn't have any game lists.
+
+    script(src='/scripts/gameListUpdate.js')

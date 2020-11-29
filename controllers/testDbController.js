@@ -17,17 +17,18 @@ exports.createGet = function (req, res) {
 };
 
 // Save a GameList to the db.
-// TODO: Update form and method to store steamId instead
 exports.createPost = function (req, res, next) {
   let gameList = new GameList.model({
-    title: req.body.title,
-    description: req.body.description,
+    title: req.fields.title,
+    description: req.fields.description,
     creatorSteamId: req.user.id,
   });
 
   gameList.save((err) => {
-    if (err) return next(err);
-    res.redirect(gameList.testUrl);
+    if (err) {
+      return res.send("error");
+    }
+    res.send("success");
   });
 };
 
