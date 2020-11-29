@@ -12,6 +12,8 @@ const endpoints = {
   getOwnedGames:
     "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
     steamApiKey,
+  getPlayerSummaries:
+    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
 };
 
 // Returns true if a JSON response is empty, false otherwise.
@@ -105,4 +107,24 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
       console.error(err);
       callback(err, null);
     });
+};
+
+exports.getPlayerSummaries = async function (user, callback) {
+  const request = {
+    url: endpoints.getPlayerSummaries,
+    params: {
+      key: steamApiKey,
+      steamids: user.id,
+      format: "json",
+    },
+  };
+
+  try {
+    const res = await axios(request);
+    console.log(res);
+    const summary = res.data.response.players[0];
+    callback(summary);
+  } catch (err) {
+    console.log(err);
+  }
 };

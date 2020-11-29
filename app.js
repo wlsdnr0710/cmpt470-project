@@ -63,7 +63,7 @@ const testDbRouter = require("./routes/testDb");
 const glistsRouter = require("./routes/glists");
 const gameDetail = require("./routes/gameDetail");
 var loginRouter = require("./routes/login");
-const homeRouter = require("./routes/userHome");
+const userPageRouter = require("./routes/userPage");
 
 const app = express();
 
@@ -103,7 +103,7 @@ app.use("/login", loginRouter);
 app.use("/testdb", testDbRouter);
 app.use("/glists", glistsRouter);
 app.use("/gameDetail", gameDetail);
-app.use("/userHome", homeRouter);
+app.use("/userPage", userPageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

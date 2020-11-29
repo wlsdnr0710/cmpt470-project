@@ -20,7 +20,6 @@ a {
   padding: 0px;
   border: 2px solid black;
   border-radius: 1vw;
-  display: flex;
   overflow: hidden;
 }
 
@@ -31,6 +30,8 @@ a {
   height: 100%;
   margin: 0px;
   padding: 0px 0px;
+  display: flex;
+  justify-content: center;
   display: inline-block
 }
 
@@ -40,8 +41,16 @@ a {
   padding: 20px;
   padding-right: 20px;
   padding-left: 20px;
-  margin: auto;
-  display: inline-block
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.liRedirect img {
+  padding: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .liRedirect:hover {

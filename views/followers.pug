@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= user.username
+
+    h2= "Followers"
+    ul(class='ulRedirect')
+        each follower in followers
+            li(class='liRedirect')
+                a(href=follower.pageUrl) 
+                  img(class='icon_img' src=follower.avatar)
+                  <h3> #{follower.personaname} </h3>
+                        
