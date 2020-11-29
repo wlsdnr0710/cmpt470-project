@@ -1,7 +1,7 @@
 const passport = require("passport");
 
 exports.login = passport.authenticate("steam", {
-  successRedirect: "/testdb",
+  successRedirect: "/userPage",
   failureRedirect: "/login",
 });
 

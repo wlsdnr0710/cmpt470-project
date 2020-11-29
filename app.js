@@ -6,7 +6,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
-
+const formidable = require("express-formidable");
 const passportService = require('./services/passportService');
 const indexRouter = require("./routes/index");
 const searchRouter = require("./routes/search");
