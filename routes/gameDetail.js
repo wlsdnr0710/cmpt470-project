@@ -35,6 +35,7 @@ router.get("/:id", function (req, res, next) {
       console.log(err);
       return next(err);
     }
+    console.log(req.params.id);
 
     let gameInfo = [];
     async.each(
@@ -54,8 +55,9 @@ router.get("/:id", function (req, res, next) {
           console.log(err);
           return next(err);
         }
+        
         let gameDetails = gameInfo.map((info) => createGameDetail(info));
-        res.render("gameDetail", { games: gameDetails });
+        res.render("gameDetail", { games: gameDetails , creator: gameList.creatorSteamId});
       }
     );
   });

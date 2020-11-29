@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const GameListSchema = Schema({
   title: { type: String, required: true, maxlength: 50 },
+  creatorSteamId: { type: String, required: true },
   description: { type: String, maxlength: 250 },
   creatorUsername: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
@@ -19,3 +20,4 @@ GameListSchema.virtual("detailsUrl").get(function () {
 });
 
 module.exports = mongoose.model("GameList", GameListSchema);
+      

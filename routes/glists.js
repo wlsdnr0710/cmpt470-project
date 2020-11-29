@@ -35,6 +35,7 @@ router.get("/createform", function (req, res, next) {
       for (i = 0; i < result.data.response.games.length; i++) {
         var appid = result.data.response.games[i].appid;
         var logo = result.data.response.games[i].img_logo_url;
+        var playtime_forever = result.data.response.games[i].playtime_forever;
         reduced_game = {
           appid: appid,
           name: result.data.response.games[i].name,
@@ -44,8 +45,12 @@ router.get("/createform", function (req, res, next) {
             "/" +
             logo +
             ".jpg",
+          playtime: Math.round(playtime_forever/6.0) / 10,
         };
         reduced_games.push(reduced_game);
+        reduced_games.sort((a, b) => {
+          return b.playtime - a.playtime;
+        })
         // for (i = 0; i < reduced_games.length; i++) {
         //   console.log(reduced_games[i].appid+"\n");
         //   console.log(reduced_games[i].name+"\n");
@@ -54,6 +59,7 @@ router.get("/createform", function (req, res, next) {
       }
       res.render("glistsCreateForm", {
         user: req.user,
+        steamId: id,
         reduced_games: reduced_games,
       });
     })
@@ -72,6 +78,7 @@ router.post("/createform", function (req, res, next) {
   console.log("adding to db");
   var gameList = new GameList({
     title: req.body.title,
+    creatorSteamId: req.body.steamId, // I think using both will be better
     description: req.body.description,
     creatorUsername: req.body.creatorUsername, //maybe use req.user.id
     gameIds: req.body.gameIds, //{ type: [Number] } // Steam game appids
