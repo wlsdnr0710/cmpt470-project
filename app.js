@@ -8,6 +8,7 @@ const passport = require("passport");
 const session = require("express-session");
 const SteamStrategy = require("passport-steam").Strategy;
 const fs = require("fs");
+const formidable = require("express-formidable");
 
 var User = require("./models/user");
 //grab steam key
@@ -32,17 +33,17 @@ passport.use(
   new SteamStrategy(
     {
       //i believe this will need to be changed to the domain URL where our site is deployed
-      returnURL: "https://steam-rolled.wl.r.appspot.com/login/steam",
-      realm: "https://steam-rolled.wl.r.appspot.com/",
+      returnURL: "http://localhost:3000/login/steam",
+      realm: "http://localhost:3000",
       apiKey: steamkey,
     },
     function (identifier, profile, done) {
       process.nextTick(function () {
         profile.identifier = identifier;
-        User.findOne({ id: profile.id }, function (err, doc) {
+        User.findOne({ id: profile.id }, function (err, user) {
           if (err) return console.log(err);
           //user exists
-          if (doc) return done(null, profile.id);
+          if (user) return done(null, profile.id);
           User.create(
             { id: profile.id, username: profile.displayName },
             function (err, user) {
@@ -93,6 +94,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(formidable());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
