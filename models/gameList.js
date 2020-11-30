@@ -21,13 +21,12 @@ const GameListSchema = Schema({
   },
 });
 
-// Note: get does not work with an arrow function.
-GameListSchema.virtual("testDetailsUrl").get(function () {
-  return "/testdb/details/" + this._id;
+GameListSchema.virtual("detailsUrl").get(function () {
+  return "/database/details/" + this._id;
 });
 
-GameListSchema.virtual("detailsUrl").get(function () {
-  return "/gameDetail/" + this._id;
+GameListSchema.virtual("deleteUrl").get(function () {
+  return "/database/delete/" + this._id;
 });
 
 GameListSchema.virtual("printStatus").get(function () {
