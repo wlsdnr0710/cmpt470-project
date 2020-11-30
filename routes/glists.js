@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
 // create gamelist, choose from owned games
 router.get("/createform", function (req, res, next) {
   var steamkey = "E8E95B7D362F3A6D263CBDFB6F694293";
-  var id = req.user.id;
+  var id = req.user.steamId;
   var reduced_games = [];
   var reduced_game = {};
   // we could maybe our own simple api/function to do this call later, for now just use plain query
@@ -70,18 +70,21 @@ router.get("/createform", function (req, res, next) {
 router.post("/createform", function (req, res, next) {
   // add the stuff here
   // show a flash msg maybe
+  console.log("here");
   console.log("sending data");
   console.log(req.body);
   console.log(req.body.gameIds);
 
-  // show a flash msg maybe
+  // show a flash msg maybe 
+  // TODO: add more elements 
   console.log("adding to db");
   var gameList = new GameList({
     title: req.body.title,
     creatorSteamId: req.body.steamId, // I think using both will be better
     description: req.body.description,
-    creatorUsername: req.body.creatorUsername, //maybe use req.user.id
+    //createdDate: ,
     gameIds: req.body.gameIds, //{ type: [Number] } // Steam game appids
+    //status: , 
   });
 
   gameList.save((err) => {

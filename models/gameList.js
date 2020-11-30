@@ -12,7 +12,6 @@ const GameListSchema = Schema({
   title: { type: String, required: true, maxlength: 50 },
   creatorSteamId: { type: String, required: true },
   description: { type: String, maxlength: 250 },
-  creatorSteamId: { type: String, required: true },
   createdDate: { type: Date, default: Date.now, required: true },
   gameIds: { type: [Number] }, // Steam game appids
   status: {
