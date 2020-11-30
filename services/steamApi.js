@@ -28,7 +28,6 @@ function cacheGames(games) {
     let update = {
       appId: game.appid,
       name: game.name,
-      playtimeForever: game.playtime_forever,
       imgIconUrl: game.img_icon_url,
       imgLogoUrl: game.img_logo_url,
     };
