@@ -30,17 +30,18 @@ GameListSchema.virtual("detailsUrl").get(function () {
   return "/gameDetail/" + this._id;
 });
 
-
 GameListSchema.virtual("printStatus").get(function () {
   switch (this.status) {
-    case "ACTIVE":
-      return "In progress";
-    case "COMPLETED":
+    case Status.Active:
+      return "In Progress";
+    case Status.Completed:
       return "Completed";
-    case "DROPPED":
+    case Status.Awaiting:
+      return "Awaiting";
+    case Status.Dropped:
       return "Dropped";
     default:
-      return "Unknown";
+      throw "Status being printed not handled";
   }
 });
 
