@@ -6,60 +6,10 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
-const SteamStrategy = require("passport-steam").Strategy;
-const fs = require("fs");
-
-var User = require("./models/user");
-//grab steam key
-try {
-  var steamkey = fs.readFileSync("./token.txt", "utf8");
-} catch (err) {
-  console.error(err);
-}
-//passport for persistent login sessions
-passport.serializeUser(function (id, done) {
-  done(null, id);
-});
-
-passport.deserializeUser(function (steamid, done) {
-  User.findOne({ id: steamid }, function (err, user) {
-    done(err, user);
-  });
-  //done(null, obj);
-});
-
-passport.use(
-  new SteamStrategy(
-    {
-      //i believe this will need to be changed to the domain URL where our site is deployed
-      // returnURL: "https://steam-rolled.wl.r.appspot.com/login/steam",
-      // realm: "https://steam-rolled.wl.r.appspot.com/",
-      returnURL: "http://localhost:3000/login/steam",
-      realm: "http://localhost:3000/",
-      apiKey: steamkey,
-    },
-    function (identifier, profile, done) {
-      process.nextTick(function () {
-        profile.identifier = identifier;
-        User.findOne({ id: profile.id }, function (err, doc) {
-          if (err) return console.log(err);
-          //user exists
-          if (doc) return done(null, profile.id);
-          User.create(
-            { id: profile.id, username: profile.displayName },
-            function (err, user) {
-              if (err) return handleError(err);
-            }
-          );
-          return done(null, profile.id);
-        });
-      });
-    }
-  )
-);
-
+const formidable = require("express-formidable");
+const passportService = require('./services/passportService');
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const searchRouter = require("./routes/search");
 const testDbRouter = require("./routes/testDb");
 const glistsRouter = require("./routes/glists");
 const gameDetail = require("./routes/gameDetail");
@@ -96,8 +46,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(formidable());
+
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/search", searchRouter);
 app.use("/login", loginRouter);
 app.use("/testdb", testDbRouter);
 app.use("/glists", glistsRouter);
