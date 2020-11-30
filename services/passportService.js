@@ -33,8 +33,8 @@ passport.use(
                 if (err) return console.log(err);
                 //user exists
                 if (user) return done(null, profile.id);
-
-                steamApi.getOwnedGames(identifier, false, (err, games) => {
+                steamApi.getOwnedGames(profile.id, false, (err, games) => {
+                    console.log("games: ", games);
                     let ownedGameIds = games.map(game => game.appid);
                     User.create(
                         { 
