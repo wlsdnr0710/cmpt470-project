@@ -3,22 +3,24 @@ extends layout
 block content
     h1= "TEST: Create a Game List"
 
-    form(method='POST')
+    form(action= '/createform', method='POST')
+        input(name='steamId', value=steamId, type='hidden')
         label(for='title') Title of Game List:
         input#title(type='text', name='title')
         br
         label(for='description') Description of Game List:
         input#description(type='textarea', name='description')
         br
-        label(for='creatorUsername') Creator username:
-        input#creatorUsername(type='text', name='creatorUsername')
-        br
 
         fieldset
             each game in reduced_games
                 img(src=game.img)
-                label #{game.name}
+                if game.playtime >  0
+                    label #{game.name} - playtime : #{game.playtime} hours
+                else
+                    label #{game.name} - have not played yet
                 input(type='checkbox' id=game.appid name='gameIds' value=game.appid)
+                br
             else
                 p = 'empty'     
         input(type='submit') 

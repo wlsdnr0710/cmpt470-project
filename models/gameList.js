@@ -10,8 +10,8 @@ const Status = {
 
 const GameListSchema = Schema({
   title: { type: String, required: true, maxlength: 50 },
-  description: { type: String, maxlength: 250 },
   creatorSteamId: { type: String, required: true },
+  description: { type: String, maxlength: 250 },
   createdDate: { type: Date, default: Date.now, required: true },
   gameIds: { type: [Number] }, // Steam game appids
   status: {
@@ -29,6 +29,7 @@ GameListSchema.virtual("testDetailsUrl").get(function () {
 GameListSchema.virtual("detailsUrl").get(function () {
   return "/gameDetail/" + this._id;
 });
+
 
 GameListSchema.virtual("printStatus").get(function () {
   switch (this.status) {
