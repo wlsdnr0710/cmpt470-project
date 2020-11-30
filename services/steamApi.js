@@ -13,7 +13,7 @@ const endpoints = {
     "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
     steamApiKey,
   getPlayerSummaries:
-    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+    "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/",
 };
 
 // Returns true if a JSON response is empty, false otherwise.
@@ -24,21 +24,19 @@ function emptyResponse(res) {
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
   for (game of games) {
-    Game.findOne({ appId: game.appid }, (err, found) => {
-      if (err) return console.error(err);
-      if (found) return; // Already cached.
+    let filter = { appId: game.appid };
+    let update = {
+      appId: game.appid,
+      name: game.name,
+      playtimeForever: game.playtime_forever,
+      imgIconUrl: game.img_icon_url,
+      imgLogoUrl: game.img_logo_url,
+    };
 
-      let cacheGame = new Game({
-        appId: game.appid,
-        name: game.name,
-        playtimeForever: game.playtime_forever,
-        imgIconUrl: game.img_icon_url,
-        imgLogoUrl: game.img_logo_url,
-      });
-
-      cacheGame.save((err) => {
-        if (err) console.error(err);
-      });
+    // Creates a cached game if it does not exist, otherwise updates it. The update
+    // is not particularly relevant.
+    Game.findOneAndUpdate(filter, update, { upsert: true }, (err) => {
+      if (err) console.log(err);
     });
   }
 }
