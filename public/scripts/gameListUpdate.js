@@ -5,12 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initCreateFormHandler() {
   const createForm = document.getElementById("createForm");
   createForm.onsubmit = async () => {
-    let response = await fetch("/testDb/create", {
+    fetch("/testDb/create", {
       method: "POST",
       body: new FormData(createForm),
     });
-    let result = await response.json();
-    console.log(result);
   };
 }
 
