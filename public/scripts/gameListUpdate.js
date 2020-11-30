@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initCreateFormHandler() {
   const createForm = document.getElementById("createForm");
   createForm.onsubmit = async () => {
-    fetch("/testDb/create", {
+    fetch("/database/create", {
       method: "POST",
       body: new FormData(createForm),
     });

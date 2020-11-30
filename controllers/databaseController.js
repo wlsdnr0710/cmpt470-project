@@ -32,14 +32,14 @@ exports.update = function (req, res, next) {
     description: req.fields.description,
   };
 
-  GameList.model.findOneAndUpdate(toFind, updatingTo, (err, updated) => {
+  GameList.model.findOneAndUpdate(toFind, updatingTo, (err) => {
     if (err) return console.error(err);
   });
 };
 
 // Deletes a GameList from the db.
 exports.delete = function (req, res, next) {
-  GameList.model.findOneAndRemove({ _id: req.params.id }, (err, removed) => {
+  GameList.model.findOneAndRemove({ _id: req.params.id }, (err) => {
     if (err) return console.error(err);
     res.redirect("/userPage/" + req.user.id);
   });

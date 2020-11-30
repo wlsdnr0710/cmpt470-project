@@ -7,11 +7,10 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
 const formidable = require("express-formidable");
-const passportService = require('./services/passportService');
+
 const indexRouter = require("./routes/index");
 const searchRouter = require("./routes/search");
-const testDbRouter = require("./routes/testDb");
-const glistsRouter = require("./routes/glists");
+const databaseRouter = require("./routes/database");
 const gameDetail = require("./routes/gameDetail");
 var loginRouter = require("./routes/login");
 const userPageRouter = require("./routes/userPage");
@@ -34,6 +33,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+require("./services/passportService");
+
 app.use(
   session({
     secret: "your secret",
@@ -42,7 +44,6 @@ app.use(
     saveUninitialized: true,
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -51,8 +52,7 @@ app.use(formidable());
 app.use("/", indexRouter);
 app.use("/search", searchRouter);
 app.use("/login", loginRouter);
-app.use("/testdb", testDbRouter);
-app.use("/glists", glistsRouter);
+app.use("/database", databaseRouter);
 app.use("/gameDetail", gameDetail);
 app.use("/userPage", userPageRouter);
 

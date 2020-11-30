@@ -31,6 +31,8 @@ block content
 
         h2= "Backlogs"
         if browsingUserOwnsPage
+            block createListButton
+
             button(type="button"
                 class="btn btn-success mb-2"
                 data-toggle="modal"
@@ -57,14 +59,14 @@ block content
         ul(class="list-group")
           each gameList in gameLists
               li(class='d-flex flex-row')
-                  a(class="list-group-item list-group-item-action float-left w-75" href=gameList.testDetailsUrl) #{gameList.title}
+                  a(class="list-group-item list-group-item-action float-left w-75" href=gameList.detailsUrl) #{gameList.title}
                       span(class="badge badge-primary badge-pill float-right ml-3") Games: #{gameList.gameIds.length}
                       span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
                       span(class="badge badge-secondary badge-pill float-right ml-3") Created: #{gameList.printDateCreated}
                   if browsingUserOwnsPage
-                      a(class="btn btn-danger float-right ml-1" href="/testdb/delete/" + gameList._id)
+                      a(class="btn btn-danger float-right ml-1" href=gameList.deleteUrl)
                           i(class="fa fa-trash")
           else
               p This user doesn't have any game lists.
-        
+
     script(src='/scripts/gameListUpdate.js')
