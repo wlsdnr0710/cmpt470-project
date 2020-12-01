@@ -8,7 +8,9 @@ const GameList = require("../models/gameList");
 // TODO: Please move functions into a controller called gameController.
 
 router.get("/:id", function (req, res, next) {
-    GameList.model.findById(req.params.id, function (err, user) {
+    GameList.model
+    .find({ creatorSteamId: user })
+    .exec(function (err, user) {
         var gameIds = user.gameIds;
         var creatorSteamId = user.creatorSteamId;
         var steamkey = "E8E95B7D362F3A6D263CBDFB6F694293";

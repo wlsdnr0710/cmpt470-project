@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  h1 Details
-  h2 #{title}  
+  include nav.pug
+  h1 #{title}  
   h3 by #{creator}
   p description : #{description}
 
@@ -10,6 +10,9 @@ block content
   each game in info
     li
       h1 #{game.name}
+      each genre in game.genre
+        span(class="badge badge-primary badge-pill float-right ml-3") #{genre}
+      p 
       img(src=game.image)
       p #{game.short_description}
       if game.isFree
