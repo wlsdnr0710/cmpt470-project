@@ -8,26 +8,32 @@ exports.index = function (req, res, next) {
   });
 };
 
-exports.followuser = async function (req, res, next) {
-  console.log("pageUser: ", req.body.pageUserId);
-  console.log("loggedInUser: ", req.body.loggedInUserId);
-  var user = await User.find({ _id: req.body.loggedInUserId, following: `${req.body.pageUserId}`});
-  console.log("user: ", user);
-  if(!user[0]){
-    console.log("in here");
-    const result1 = await User.updateOne({_id: req.body.pageUserId},  { $push: {followers: [`${req.body.loggedInUserId}`] } });
-    console.log(result1);
-    const result2 = await User.updateOne({_id: req.body.loggedInUserId},  { $push: {following: [`${req.body.pageUserId}`] } });
-    console.log(result2);
+exports.test = function (req, res, next) {
+  res.redirect("/");
+}
+
+exports.follow = async function (req, res, next) {
+  console.log("in follow controller");
+  console.log("req.params.id: ", req.params.id)
+  console.log("req.user: ", req.user)
+  var user = await User.find({_id: req.user._id, following: `${req.params.id}`});
+  console.log('user:', user);
+  if(!user[0]) {
+    const result1 = await User.updateOne({_id: req.params.id}, { $push: {followers: [`${req.user._id}`]}});
+    const result2 = await User.updateOne({_id: req.user._id}, { $push: {following: [`${req.params.id}`]}});
+    console.log("result1: ",result1);
+    console.log("result2: ", result2);
   }
+  res.redirect(`/userPage/${req.params.id}`);
+}
 
-  res.redirect(`/userPage/${req.body.pageUserId}`);
-};
-
-exports.unfollowuser = async function (req, res, next) {
-  const result1 = await User.updateOne({_id: req.body.pageUserId},  { $pullAll: {followers: [`${req.body.loggedInUserId}`] } } );
-  const result2 = await User.updateOne({_id: req.body.loggedInUserId},  { $pullAll: {following: [`${req.body.pageUserId}`] } } );
+exports.unfollow = async function (req, res, next) {
+  console.log("in unfollow controller");
+  console.log("req.params.id: ", req.params.id)
+  console.log("req.user: ", req.user)
+  const result1 = await User.updateOne({_id: req.params.id},  { $pullAll: {followers: [`${req.user._id}`] } } );
+  const result2 = await User.updateOne({_id: req.user._id},  { $pullAll: {following: [`${req.params.id}`] } } );
   console.log("result1: ",result1);
   console.log("result2: ", result2);
-  res.redirect(`/userPage/${req.body.pageUserId}`);
-};
+  res.redirect(`/userPage/${req.params.id}`);
+}

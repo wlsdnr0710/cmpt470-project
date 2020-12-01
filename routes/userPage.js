@@ -16,7 +16,8 @@ router.get("/:id/followers", loginController.checkIfLoggedIn, userPageController
 // Display Following (users being followed by) for user with _id
 router.get("/:id/following", loginController.checkIfLoggedIn, userPageController.renderFollowingPage);
 
-router.post("/follow", loginController.checkIfLoggedIn, userController.followuser);
+router.get("/:id/follow", loginController.checkIfLoggedIn, userController.follow);
 
-router.post("/unfollow", loginController.checkIfLoggedIn, userController.unfollowuser);
+router.get("/:id/unfollow", loginController.checkIfLoggedIn, userController.unfollow);
+
 module.exports = router;

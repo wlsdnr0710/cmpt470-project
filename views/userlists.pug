@@ -7,7 +7,8 @@ block content
     each user in users
         li
             | id:
-            p #{user.id}
+            p #{user.steamId}
+            p #{user._id}
             p #{user.username}
-    else
-        li "No users"
+            p #{user}
+            a(href=`/userPage/${user._id}`) UserPage
