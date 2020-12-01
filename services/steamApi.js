@@ -42,12 +42,12 @@ function cacheGames(games) {
 
 // Loads the owned games from the user with id 'steamId' from
 // the database, if they exist.
-function tryLoadCachedGames(steamId, callback) {
+function tryLoadCachedGames(uSteamId, callback) {
   async.waterfall(
     [
       // Check that user with 'steamId' exists.
       (cb) => {
-        User.findOne({ id: steamId }).exec((err, user) => {
+        User.findOne({ steamId: uSteamId }).exec((err, user) => {
           if (err) return cb(err, null);
           cb(null, user);
         });
@@ -92,11 +92,20 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
 
   axios(request)
     .then((res) => {
-      if (emptyResponse(res) && allowCache)
-        // TODO: Handle 429 error as well
-        return tryLoadCachedGames(steamId, callback);
-
       const games = res.data.response.games;
+      console.log("response result", res.data.response);
+      console.log("games result", games);
+      console.log(emptyResponse(res.data.response));
+      if (emptyResponse(res.data.response) && allowCache)
+      {
+        // TODO: Handle 429 error as well
+        console.log("Loading from cache");
+        return tryLoadCachedGames(steamId, callback);
+      }
+
+      //const games = res.data.response.games;
+      //console.log("response result", res.data.response);
+      //console.log("games result", games);
       cacheGames(games); // Cache owned games for later use and pass to callback.
       callback(null, games);
     })
