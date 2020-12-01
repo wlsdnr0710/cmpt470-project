@@ -9,8 +9,8 @@ block content
                 div(class='profile-stats')
                     ul(class='list-group list-group-horizontal', style='float: right;')
                         
-                        li(class='list-group-item') Lists created: 
-                        li(class='list-group-item') Lists completed:
+                        li(class='list-group-item') Lists created: #{listsCreated}
+                        li(class='list-group-item') Lists completed: #{listsCompleted}
                         li(class='list-group-item')
                             a(href=`${profileUser._id}/followers`)= "Followers:" 
                             a= " " + profileUser.followers.length
