@@ -1,0 +1,26 @@
+extends layout
+block content
+    include nav.pug
+    div(class='container d-flex')
+      div(class='container flex-col')
+        h2= "Owned Games"
+        form(id=`addGameForm`)
+          div(class='form-group')
+            each game, ind in ownedGameData
+              div(class="form-check")
+                input(class="form-check-input" type="radio" name="ownedGame" id=`ownedGame${ind}` value=`${game.appid || game.appId}` required)
+                label(class="form-check-label" for=`ownedGame${ind}`) #{game.name}
+      div(class='container flex-col align-self-center')
+        button(type="submit" class="btn btn-primary" id=`addGameSubmit` form=`addGameForm`)
+          i(class="fa fa-long-arrow-right")
+      div(class='container')
+        h2= `Games in ${gameList.title}`
+        ul(class="list-group")
+            each game, ind in listGameData
+                li(class='d-flex flex-row')
+                  p(class="list-group-item w-100 mb-0") #{game.name}
+                  a(class="btn btn-danger float-right m-2" href=gameList.removeGameUrl(game.appid || game.appId))
+                    i(class="fa fa-trash")
+    script.
+        var addGameUrl = JSON.parse('!{JSON.stringify(gameList.addGameUrl)}');
+    script(src='/scripts/addGame.js')

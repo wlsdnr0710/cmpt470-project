@@ -25,16 +25,17 @@ exports.create = function (req) {
 };
 
 // Updates an existing GameList in the db.
-exports.update = function (req, res, next) {
-  let toFind = req.params.id;
-  let updatingTo = {
-    title: req.fields.title,
-    description: req.fields.description,
-  };
+exports.update = async function (req) {
+  console.log("UPDATE LIST");
+  console.log("status,", req.fields.status);
+  console.log("title,", req.fields.title);
+  console.log("description,", req.fields.description);
 
-  GameList.model.findOneAndUpdate(toFind, updatingTo, (err) => {
-    if (err) return console.error(err);
-  });
+  var gameList = await GameList.model.findById(req.params.id);
+  gameList.status = req.fields.status;
+  gameList.title = req.fields.title;
+  gameList.description = req.fields.description;
+  return await gameList.save();
 };
 
 // Deletes a GameList from the db.
@@ -63,17 +64,17 @@ exports.details = function (req, res, next) {
 
 // Adds the game with id 'gameId' to the game list with id 'gameListId'.
 exports.addGame = async function (gameId, gameListId) {
-  GameList.model.findById(gameListId).exec((err, gameList) => {
-    if (err) return console.error(err);
-    gameList.gameIds.push(gameId);
-    gameList.save((err) => {
-      if (err) console.error(err);
-    });
-  });
+  gameList = await GameList.model.findById(gameListId);
+  gameList.gameIds.push(gameId);
+  return await gameList.save();
 };
 
+exports.addGameToList = async function (req) {
+  return await exports.addGame(req.fields.ownedGame, req.params.id);
+}
+
 // Removes the game with id 'gameId' from the game list with id 'gameListId'.
-exports.removeGame = async function (gameId, gameListId) {
+exports.removeGame = async function (gameId, gameListId, res) {
   GameList.model.findById(gameListId).exec((err, gameList) => {
     if (err) return console.error(err);
     let index = gameList.gameIds.indexOf(gameId);
@@ -82,5 +83,14 @@ exports.removeGame = async function (gameId, gameListId) {
         `gameId: ${gameId} not found in gameList: ${gameListId}`
       );
     gameList.gameIds.splice(index, 1);
+    gameList.save((err) => {
+      if (err) console.error(err);
+      res.redirect("/addGames/" + gameListId);
+    });
   });
 };
+
+exports.removeGameFromList = async function (req, res, next) {
+  await exports.removeGame(req.params.gID, req.params.glID, res);
+}
+
