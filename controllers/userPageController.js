@@ -22,7 +22,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
 
   let profileAvatar;
   await steamApi.getPlayerSummaries(
-    browsingUser,
+    profileUser,
     (summary) => (profileAvatar = summary.avatarfull)
   );
 
@@ -36,6 +36,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
       console.log(userGameLists);
       console.log(completedLists);
       res.render("userPage", {
+        user: browsingUser,
         profileAvatar: profileAvatar,
         profileUser: profileUser,
         browsingUserOwnsPage: browsingUserOwnsPage,
@@ -43,6 +44,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
         gameLists: GameList.sort(userGameLists, GameList.SortFields.Status),
         listsCreated: userGameLists.length,
         listsCompleted: completedLists.length,
+        active: "profile"
       });
     });
 };
