@@ -29,6 +29,18 @@ GameListSchema.virtual("deleteUrl").get(function () {
   return "/database/delete/" + this._id;
 });
 
+GameListSchema.virtual("updateUrl").get(function () {
+  return "/database/update/" + this._id;
+});
+
+GameListSchema.virtual("addGameUrl").get(function () {
+  return "/database/addGame/" + this._id;
+});
+
+GameListSchema.methods.removeGameUrl = function (gameId) {
+  return "/database/list/" + this._id + "/removeGame/" + gameId;
+};
+
 GameListSchema.virtual("printStatus").get(function () {
   switch (this.status) {
     case Status.Active:

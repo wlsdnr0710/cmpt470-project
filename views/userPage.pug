@@ -9,8 +9,8 @@ block content
                 div(class='profile-stats')
                     ul(class='list-group list-group-horizontal', style='float: right;')
                         
-                        li(class='list-group-item') Lists created: 
-                        li(class='list-group-item') Lists completed:
+                        li(class='list-group-item') Lists created: #{listsCreated}
+                        li(class='list-group-item') Lists completed: #{listsCompleted}
                         li(class='list-group-item')
                             a(href=`${profileUser._id}/followers`)= "Followers:" 
                             a= " " + profileUser.followers.length
@@ -55,18 +55,67 @@ block content
                         div(class="modal-footer")
                             button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                             input(type="submit" class="btn btn-primary" id="createFormSubmit" form='createForm')
-
+            each gameList, ind in gameLists
+                div(class="modal fade" id=`gameListUpdateForm${ind}` aria-hidden="true")
+                    div(class="modal-dialog modal-dialog-centered" role="document")
+                        div(class="modal-content")
+                            div(class="modal-header")
+                                h5(class="modal-title") Update Game List
+                                button(type="button" class="close" data-dismiss="modal")
+                                    span(aria-hidden="true") &times;
+                            div(class="modal-body")
+                                form(id=`updateForm${ind}`)
+                                    div(class='form-group')
+                                        label(for=`gameListName${ind}` class='col-form-label') Name
+                                        input(type='text' class='form-control' name='title' id=`gameListName${ind}` value=`${gameList.title}` required)
+                                    div(class='form-group')
+                                        label(for=`gameListDesc${ind}` class='col-form-label') Description
+                                        textarea(id=`gameListDesc${ind}` name='description' class='form-control' required) #{gameList.description}
+                                    div(class='form-group')
+                                        label(for=`gameListStatus${ind}` class='col-form-label') Name
+                                        select(class='form-control' name='status' id=`gameListStatus${ind}` required)
+                                            if (gameList.printStatus == "In Progress")
+                                                option(value="ACTIVE" selected) In Progress
+                                            else
+                                                option(value="ACTIVE") In Progress
+                                            if (gameList.printStatus == "Completed")
+                                                option(value="COMPLETED" selected) Completed
+                                            else
+                                                option(value="COMPLETED") Completed
+                                            if (gameList.printStatus == "Awaiting")
+                                                option(value="AWAITING" selected) Awaiting
+                                            else
+                                                option(value="AWAITING") Awaiting
+                                            if (gameList.printStatus == "Dropped")
+                                                option(value="DROPPED" selected) Dropped
+                                            else
+                                                option(value="DROPPED") Dropped
+                            div(class="modal-footer")
+                                button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+                                input(type="submit" class="btn btn-primary" id=`updateFormSubmit${ind}` form=`updateForm${ind}`)
         ul(class="list-group")
-          each gameList in gameLists
-              li(class='d-flex flex-row')
-                  a(class="list-group-item list-group-item-action float-left w-75" href=gameList.detailsUrl) #{gameList.title}
-                      span(class="badge badge-primary badge-pill float-right ml-3") Games: #{gameList.gameIds.length}
-                      span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
-                      span(class="badge badge-secondary badge-pill float-right ml-3") Created: #{gameList.printDateCreated}
-                  if browsingUserOwnsPage
-                      a(class="btn btn-danger float-right ml-1" href=gameList.deleteUrl)
-                          i(class="fa fa-trash")
-          else
-              p This user doesn't have any game lists.
-
+            each gameList, ind in gameLists
+                li(class='d-flex flex-row')
+                    a(class="list-group-item list-group-item-action float-left w-75" href=gameList.detailsUrl) #{gameList.title}
+                        span(class="badge badge-primary badge-pill float-right ml-3") Games: #{gameList.gameIds.length}
+                        span(class="badge badge-info badge-pill float-right ml-3") #{gameList.printStatus}
+                        span(class="badge badge-secondary badge-pill float-right ml-3") Created: #{gameList.printDateCreated}
+                    if browsingUserOwnsPage
+                        button(type="button"
+                            class="btn btn-success m-2"
+                            data-toggle="modal"
+                            data-target=`#gameListUpdateForm${ind}`)
+                            i(class="fa fa-pencil")
+                        a(class="btn btn-success m-2" href=`/addGames/${gameList._id}`)
+                            i(class="fa fa-plus")
+                        a(class="btn btn-danger float-right m-2" href=gameList.deleteUrl)
+                            i(class="fa fa-trash")
+            else
+                p This user doesn't have any game lists.
+    script.
+        var gameLists = JSON.parse('!{JSON.stringify(gameLists)}');
+        var gameListUpdateUrls = [];
+    each gameList in gameLists
+        script.
+            gameListUpdateUrls.push( "#{gameList.updateUrl}" );
     script(src='/scripts/gameListUpdate.js')

@@ -14,6 +14,7 @@ const databaseRouter = require("./routes/database");
 const gameDetail = require("./routes/gameDetail");
 var loginRouter = require("./routes/login");
 const userPageRouter = require("./routes/userPage");
+const addGamesRouter = require("./routes/addGames");
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use("/login", loginRouter);
 app.use("/database", databaseRouter);
 app.use("/gameDetail", gameDetail);
 app.use("/userPage", userPageRouter);
+app.use("/addGames", addGamesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
