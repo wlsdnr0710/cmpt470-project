@@ -14,7 +14,7 @@ exports.redirectToLoggedInPage = function (req, res, next) {
  */
 exports.renderUserPagebyId = async function (req, res, next) {
   let browsingUser = req.user;
-  let browsingUserOwnsPage = req.user._id !== req.params.id;
+  let browsingUserOwnsPage = req.user._id == req.params.id;
 
   let profileUser = browsingUserOwnsPage
     ? browsingUser
