@@ -9,7 +9,7 @@ router.post("/create", dbController.create);
 
 router.post("/update/:id", dbController.update);
 
-router.post("/addGame/:id", dbController.addGameToList);
+router.get("/addGame/:id", dbController.addGameToList);
 
 // Note: deletes on GET, which makes it easier to use with anchor tags and href.
 router.get("/delete/:id", dbController.delete);
