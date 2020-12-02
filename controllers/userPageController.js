@@ -116,35 +116,29 @@ exports.renderFollowingPage = async function (req, res, next) {
 
   console.log("following users,", following_users);
   following_info = new Array(pageUser.following.length);
-  async.forEach(
-    pageUser.following,
-    async function (following_id, done) {
-      following_ind = pageUser.following.indexOf(following_id);
-      var user = following_users[following_ind];
-      await steamApi.getPlayerSummaries(user, function (summary) {
-        console.log(summary);
-        // get name and avatar
-        following_info[following_ind] = {
-          personaname: summary.personaname,
-          avatar: summary.avatar,
-          pageUrl: "/userPage/" + following_id,
-        };
-      });
-      done();
-    },
-    function (async_err) {
-      if (async_err) {
-        console.log("Could not retrieve following info", async_err);
-      }
+  for (
+    var following_ind = 0;
+    following_ind < pageUser.following.length;
+    following_ind++
+  ) {
+    var user = following_users[following_ind];
+    await steamApi.getPlayerSummaries(user, function (summary) {
+      console.log(summary);
+      // get name and avatar
+      following_info[following_ind] = {
+        personaname: summary.personaname,
+        avatar: summary.avatar,
+        pageUrl: "/userPage/" + pageUser.following[following_ind],
+      };
+    });
+  }
 
-      console.log("got info for all following,", following_info);
-      res.render("following", {
-        title: pageUser.username + " | Steam Rolled",
-        user: req.user,
-        pageUser: pageUser,
-        isLoggedInUserPage,
-        allFollowed: following_info,
-      });
-    }
-  );
+  console.log("got info for all following,", following_info);
+  res.render("following", {
+    title: pageUser.username + " | Steam Rolled",
+    user: req.user,
+    pageUser: pageUser,
+    isLoggedInUserPage,
+    allFollowed: following_info,
+  });
 };
