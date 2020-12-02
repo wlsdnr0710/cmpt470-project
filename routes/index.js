@@ -6,10 +6,7 @@ const Game = require("../models/game");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  // User.find({gameIds: { $ne: null }}).exec((err, foundGameList) => {
-  // check users completed lists for leaderboard
-  // }
-  GameList.model.find({ gameIds: { $ne: null } }).exec((err, foundGameList) => {
+  GameList.model.find().exec((err, foundGameList) => {
     if (err) return next(err);
     // need mark as completed to check
     var dict = {};
@@ -39,7 +36,7 @@ router.get("/", function (req, res, next) {
     // Game.find({appId: most_wanted_game}).exec((err, foundgame) => {
     Game.findOne({ appId: most_wanted_game }).exec((err, foundgame) => {
       if (err) return next(err);
-      console.log(" GAME", foundgame);
+      // console.log(" GAME", foundgame);
       img =
         "http://media.steampowered.com/steamcommunity/public/images/apps/" +
         most_wanted_game +
@@ -49,25 +46,31 @@ router.get("/", function (req, res, next) {
       console.log(img);
 
       User.find().exec((err, users) => {
-        top_five = [];
+        var dict = {};
+        for (var i = 0; i < users.length; i++) {
+          var x =users[i].numCompletedLists().then(function(result) {
+            // here you can use the result of promiseB
+            console.log(users[i]);
+            dict[users[i].username] = result;
+            console.log("user"+i+"'s lists completed: "+result);
+          })
+          .catch(console.log(err)) ;
+        }
 
-        for (var i = 0; i < users.length; i++) {
-          // dict[users[i]] = users[i].games_completed;
-        }
-        // var obj = {a: 1, b: 2};
-        var obj = {};
-        console.log("OBJ!", obj);
-        for (var i = 0; i < users.length; i++) {
-          if (Object.keys(obj).length === 0) {
-            break;
-          }
-          var result = Object.keys(obj).reduce(function (a, b) {
-            return obj[a] > obj[b] ? a : b;
-          });
-          console.log("result!", result);
-          top_five.push({ name: result, count: obj[result] });
-          delete obj[result];
-        }
+        var users_arr = Object.keys(dict).map(function(key) {
+          return [key, dict[key]];
+        });
+        
+        // Sort the array based on the second element
+        users_arr.sort(function(first, second) {
+          return second[1] - first[1];
+        });
+        
+        // Create a new array with only the first 5 items
+        top_five = users_arr.slice(0, 5);
+        console.log("RESULT: ",users_arr.slice(0, 5));
+
+
         console.log("completed", top_five);
         res.render("index", {
           popular: most_wanted_game,
