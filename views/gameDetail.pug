@@ -15,7 +15,7 @@ block content
       p 
       img(src=game.image)
       p #{game.short_description}
-      if game.isFree
+      if game.isFree || game.price === undefined
         p Free Game
       else
         if game.discount === 0
