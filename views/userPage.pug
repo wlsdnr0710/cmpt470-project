@@ -17,12 +17,11 @@ block content
                         li(class='list-group-item')
                             a(href=`${profileUser._id}/following`)= "Following:"
                             a= " " + profileUser.following.length
-                if !browsingUserOwnsPage 
-                    
-                    if browsingUser.following.includes(`${profileUser._id}`)
-                        a(href=`/userPage/${profileUser._id}/unfollow`, role='button', class='btn btn-secondary') Unfollow
-                    else
-                        a(href=action=`/userPage/${profileUser._id}/follow`, role='button', class='btn btn-primary') Follow
+            if !browsingUserOwnsPage 
+                if browsingUser.following.includes(`${profileUser._id}`)
+                    a(href=`/userPage/${profileUser._id}/unfollow`, role='button', class='btn btn-secondary ml-3') Unfollow
+                else
+                    a(href=action=`/userPage/${profileUser._id}/follow`, role='button', class='btn btn-primary ml-3') Follow
         h2= "Backlogs"
         if browsingUserOwnsPage
             block createListButton
