@@ -1,13 +1,14 @@
 extends layout
-
 block content
-    h1= user.username
-
-    h2= "Following"
-    ul(class='ulRedirect')
-        each followed in allFollowed
-            li(class='liRedirect')
-                a(href=followed.pageUrl) 
-                  img(class='icon_img' src=followed.avatar)
-                  <h3> #{followed.personaname} </h3>
-                        
+    include nav
+    .container
+        .list-group
+            h1= pageUser.username
+            h2= "Following"
+        .list-group(style="height: 75vh; overflow: auto;")
+            each followed, ind in allFollowed
+                a(href=followed.pageUrl, id=`a${ind}`, class='list-group-item list-group-item-action collapse show')
+                    button(id=`button${ind}`, class='invisible btn', data-toggle='collapse', data-target=`a${ind}` )
+                    div(class='d-flex w-100 justify-content-between')
+                        h5(class='mb-1', id=`username${ind}`) #{followed.personaname}
+                        img(src=followed.avatar)

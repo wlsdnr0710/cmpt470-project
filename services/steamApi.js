@@ -5,7 +5,8 @@ const async = require("async");
 
 // This module is responsible for handling queries to Steam API endpoints.
 
-const steamApiKey = "E8E95B7D362F3A6D263CBDFB6F694293";
+// TODO: Use another api key if this one isn't working
+const steamApiKey = "FEF3604CF3452FE9F597879DA82642DA";
 
 // Holds URLs for different Steam API endpoints.
 const endpoints = {
@@ -24,12 +25,13 @@ function emptyResponse(res) {
 // Caches the given games in the database, if they are not already cached.
 function cacheGames(games) {
   for (game of games) {
-    let filter = { appId: game.appid };
+    let filter = { appid: game.appid };
     let update = {
-      appId: game.appid,
+      appid: game.appid,
       name: game.name,
-      imgIconUrl: game.img_icon_url,
-      imgLogoUrl: game.img_logo_url,
+      playtime_forever: game.playtime_forever,
+      img_icon_url: game.img_icon_url,
+      img_logo_url: game.img_logo_url,
     };
 
     // Creates a cached game if it does not exist, otherwise updates it. The update
@@ -55,7 +57,7 @@ function tryLoadCachedGames(uSteamId, callback) {
       // Load the user's owned games.
       (user, cb) => {
         Game.find()
-          .where("appId")
+          .where("appid")
           .in(user.ownedGameIds) // NOTE: Relies on this being populated upon user creation!
           .exec((err, ownedGames) => {
             if (err) return cb(err);
@@ -93,11 +95,10 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
   axios(request)
     .then((res) => {
       const games = res.data.response.games;
-      console.log("response result", res.data.response);
-      console.log("games result", games);
-      console.log(emptyResponse(res.data.response));
-      if (emptyResponse(res.data.response) && allowCache)
-      {
+      // console.log("response result", res.data.response);
+      // console.log("games result", games);
+      // console.log(emptyResponse(res.data.response));
+      if (emptyResponse(res.data.response) && allowCache) {
         // TODO: Handle 429 error as well
         console.log("Loading from cache");
         return tryLoadCachedGames(steamId, callback);
@@ -121,6 +122,26 @@ exports.getPlayerSummaries = async function (user, callback) {
     params: {
       key: steamApiKey,
       steamids: user.steamId,
+      format: "json",
+    },
+  };
+
+  try {
+    const res = await axios(request);
+    console.log(res);
+    const summary = res.data.response.players[0];
+    callback(summary);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.getPlayerSummariesWithSteamId = async function (user, callback) {
+  const request = {
+    url: endpoints.getPlayerSummaries,
+    params: {
+      key: steamApiKey,
+      steamids: user,
       format: "json",
     },
   };

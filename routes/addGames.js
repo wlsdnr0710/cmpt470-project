@@ -28,7 +28,12 @@ router.get("/:glID", function(req, res, next) {
       let gamesNotInList = allOwnedGames.filter((game) =>
         !(gameList.gameIds.includes(game.appid || game.appId))
       );
-      res.render("addGames", { gameList: gameList, listGameData: gamesInList, ownedGameData: gamesNotInList });
+      res.render("addGames", { 
+        gameList: gameList, 
+        listGameData: gamesInList, 
+        ownedGameData: gamesNotInList,
+        user: req.user
+       });
     });
   });
 });

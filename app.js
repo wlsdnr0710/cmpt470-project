@@ -11,7 +11,6 @@ const formidable = require("express-formidable");
 const indexRouter = require("./routes/index");
 const searchRouter = require("./routes/search");
 const databaseRouter = require("./routes/database");
-const gameDetail = require("./routes/gameDetail");
 var loginRouter = require("./routes/login");
 const userPageRouter = require("./routes/userPage");
 const addGamesRouter = require("./routes/addGames");
@@ -54,7 +53,6 @@ app.use("/", indexRouter);
 app.use("/search", searchRouter);
 app.use("/login", loginRouter);
 app.use("/database", databaseRouter);
-app.use("/gameDetail", gameDetail);
 app.use("/userPage", userPageRouter);
 app.use("/addGames", addGamesRouter);
 

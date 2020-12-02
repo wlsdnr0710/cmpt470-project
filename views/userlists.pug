@@ -1,13 +1,20 @@
 extends layout
 
 block content
-    h1 "TEST: User List Index"
+    include nav
+    .container
+        div(class='input-group mb-3')
+            input(type='text', id='searchtext', class='form-control', placeholder='Search for username', aria-label='queried username' aria-describedby='button-addon2')
 
-    ul
-    each user in users
-        li
-            | id:
-            p #{user.id}
-            p #{user.username}
-    else
-        li "No users"
+        .list-group
+            - for(var x = 0; x < users.length;  x++)
+                a(href=`/userPage/${users[x]._id}`,id=`a${x}`, class='list-group-item list-group-item-action collapse show')
+                    button(id=`button${x}`, class='invisible btn', data-toggle='collapse', data-target=`a${x}` )
+                    div(class='d-flex w-100 justify-content-between')
+                        h5(class='mb-1', id=`username${x}`) #{users[x].username}
+                        if loggedInUser.following.includes(`${users[x]._id}`)
+                            small following
+                        img(src=user_info[x].avatar)
+    script.
+        var users = JSON.parse('!{JSON.stringify(users)}');
+    script(src='/scripts/searchfilter.js')
