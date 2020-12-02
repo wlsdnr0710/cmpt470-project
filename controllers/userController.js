@@ -1,16 +1,41 @@
 const User = require("../models/user");
-
+const steamApi = require("../services/steamApi");
 // Get the title of every GameList.
-exports.index = function (req, res, next) {
-  User.find().exec((err, allUsers) => {
-    if (err) return next(err);
-    res.render("userlists", { users: allUsers });
-  });
+exports.index = async function (req, res, next) {
+  var allUsers = await User.find();
+  var user_info = new Array(allUsers.length);
+  for (var user_index = 0; user_index < allUsers.length; user_index++) {
+    var user = allUsers[user_index];
+    await steamApi.getPlayerSummaries(user, function (summary) {
+      console.log(summary);
+      // get name and avatar
+      user_info[user_index] = {
+        personaname: summary.personaname,
+        avatar: summary.avatar,
+        pageUrl: "/userPage/" + user._id,
+      };
+    });
+  }
+  res.render("userlists", { loggedInUser: req.user, users: allUsers, user_info: user_info, active: "search" });
 };
 
-exports.test = function (req, res, next) {
-  res.redirect("/");
-}
+exports.search = async function (req, res, next) {
+  var allUsers = await User.find();
+  var user_info = new Array(allUsers.length);
+  for (var user_index = 0; user_index < allUsers.length; user_index++) {
+    var user = allUsers[user_index];
+    await steamApi.getPlayerSummaries(user, function (summary) {
+      console.log(summary);
+      // get name and avatar
+      user_info[user_index] = {
+        personaname: summary.personaname,
+        avatar: summary.avatar,
+        pageUrl: "/userPage/" + user._id,
+      };
+    });
+  }
+  res.render("userlists", { loggedInUser: req.user, users: allUsers, user_info: user_info, active: "search" });
+};
 
 exports.follow = async function (req, res, next) {
   console.log("in follow controller");
@@ -25,7 +50,7 @@ exports.follow = async function (req, res, next) {
     console.log("result2: ", result2);
   }
   res.redirect(`/userPage/${req.params.id}`);
-}
+};
 
 exports.unfollow = async function (req, res, next) {
   console.log("in unfollow controller");
@@ -36,4 +61,4 @@ exports.unfollow = async function (req, res, next) {
   console.log("result1: ",result1);
   console.log("result2: ", result2);
   res.redirect(`/userPage/${req.params.id}`);
-}
+};

@@ -6,5 +6,5 @@ const userController = require("../controllers/userController");
 router.get("/", userController.index);
 /* GET users listing. */
 
-
+router.get("/:query", userController.search);
 module.exports = router
