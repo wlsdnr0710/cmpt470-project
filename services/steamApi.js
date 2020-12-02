@@ -93,9 +93,9 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
   axios(request)
     .then((res) => {
       const games = res.data.response.games;
-      console.log("response result", res.data.response);
-      console.log("games result", games);
-      console.log(emptyResponse(res.data.response));
+      // console.log("response result", res.data.response);
+      // console.log("games result", games);
+      // console.log(emptyResponse(res.data.response));
       if (emptyResponse(res.data.response) && allowCache)
       {
         // TODO: Handle 429 error as well
@@ -121,6 +121,26 @@ exports.getPlayerSummaries = async function (user, callback) {
     params: {
       key: steamApiKey,
       steamids: user.steamId,
+      format: "json",
+    },
+  };
+
+  try {
+    const res = await axios(request);
+    console.log(res);
+    const summary = res.data.response.players[0];
+    callback(summary);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.getPlayerSummariesWithSteamId = async function (user, callback) {
+  const request = {
+    url: endpoints.getPlayerSummaries,
+    params: {
+      key: steamApiKey,
+      steamids: user,
       format: "json",
     },
   };

@@ -49,85 +49,66 @@ exports.delete = function (req, res, next) {
   });
 };
 
-// Get details of a particular GameList whose id is passed as a query parameter.
 exports.details = function (req, res, next) {
-  GameList.model.findById(req.params.id, function (err, user) {
-      var gameIds = user.gameIds;
-      var creatorSteamId = user.creatorSteamId;
-      var steamkey = "E8E95B7D362F3A6D263CBDFB6F694293";
-      var gameUserInfo = {};
-      var gameUserInfos = [];
-      var creatorInfoQuery = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + steamkey;
-      var creatorInfoReq = {
-          url: creatorInfoQuery,
-          params: {
-              steamid: creatorSteamId,
-              include_appinfo: true, 
-              include_played_free_games: false,
-              format:"json",
-          },
-      };
-      axios(creatorInfoReq)
-          .then((result) => {
-              for (i = 0; i < result.data.response.games.length; i++) {   // TODO: fix ordering refer /routes/addGames.js 20
-                  var appid = result.data.response.games[i].appid;
-                  if (!gameIds.includes(appid)) {
-                      continue;
-                  }
-                  var playtime_forever = result.data.response.games[i].playtime_forever;
-                  gameUserInfo = {
-                      appid: appid,
-                      playtime: Math.round(playtime_forever/6.0) / 10,
-                  };
-                  gameUserInfos.push(gameUserInfo);
-              }
-              // creator user info ready : get gamelist game detailed info
-              var finalInfos = [];
-              var finalInfo = {};
-              var gameInfoURL = "https://store.steampowered.com/api/appdetails?appids="
-              async.forEachOf(
-                  gameIds,
-                  (id, placeholder, cb) => {    //TODO: FIX random ordering - refer) userPageController.js 117
-                      superfetch
-                          .get("https://store.steampowered.com/api/appdetails?appids=" + id)
-                          .then((result)=> {
-                              let gameInfo = JSON.parse(result.text.replace(/<br>/g, "\\n").replace(/<[^>]*>/g, ""));
-                              if (gameInfo[id].success){
-                                var genres = [];
-                                for (i in gameInfo[id].data.genres) {
-                                  genres.push(gameInfo[id].data.genres[i].description);
-                                }
-                                console.log(genres)
-                                finalInfo = {
-                                    name: gameInfo[id].data.name,
-                                    image: gameInfo[id].data.header_image,
-                                    short_description: gameInfo[id].data.short_description,
-                                    developers: gameInfo[id].data.developers,
-                                    isFree: gameInfo[id].data.is_free,
-                                    price: !gameInfo[id].data.is_free ? gameInfo[id].data.price_overview.final_formatted : undefined,
-                                    discount: !gameInfo[id].data.is_free ? gameInfo[id].data.price_overview.discount_percent : undefined,
-                                    genre: genres,
-                                    creatorPlaytime: gameUserInfos.find(el => el.appid == id).playtime,
-                                };
-                                finalInfos.push(finalInfo);
-                              }
-                              cb();
-                          }, (err) => {
-                              console.log("failed to fetch");
-                              console.log(err);
-                              cb(err);
-                          });
-                  },
-                  (err) => {
-                      if (err) {
-                          console.log('error');
-                          return next(err);
+  GameList.model.findById(req.params.id, function (err, gamelist) {
+    if (err) return next(err);
+    var gamelistCreatorInfos = new Array(gamelist.gameIds.length);
+    var username = "Anonymous";
+    Steam.getPlayerSummariesWithSteamId(gamelist.creatorSteamId, function(summary) {
+      username = summary.personaname
+    });
+
+    Steam.getOwnedGames(gamelist.creatorSteamId, true, (err, allOwnedGames) => {
+      if(err) return next(err);
+      gamelist.gameIds.forEach(function (gameId, index) {
+        let foundUserInfo = allOwnedGames.find(game => (game.appid || game.appId) == gameId);
+        gamelistCreatorInfos[index] = foundUserInfo;
+      });
+      // creator info - playtime ready
+      var finalInfos = new Array(gamelist.gameIds.length);
+      async.forEachOf(
+        gamelist.gameIds,
+        (id, index, cb) => {    
+            superfetch
+                .get("https://store.steampowered.com/api/appdetails?appids=" + id)
+                .then((result)=> {
+                    let gameInfo = JSON.parse(result.text.replace(/<br>/g, "\\n").replace(/<[^>]*>/g, ""));
+                    if (gameInfo[id].success){
+                      var genres = [];
+                      for (i in gameInfo[id].data.genres) {
+                        genres.push(gameInfo[id].data.genres[i].description);
                       }
-                      res.render("gameDetail", { info: finalInfos , title: user.title, description: user.description, creator: user.creatorUsername });
-                  }
-              );
-          })
-          .catch((err) => console.log(err));
+                      // console.log(genres)
+                      finalInfo = {
+                          name: gameInfo[id].data.name,
+                          image: gameInfo[id].data.header_image,
+                          short_description: gameInfo[id].data.short_description,
+                          developers: gameInfo[id].data.developers,
+                          isFree: gameInfo[id].data.is_free,
+                          price: !gameInfo[id].data.is_free ? gameInfo[id].data.price_overview.final_formatted : undefined,
+                          discount: !gameInfo[id].data.is_free ? gameInfo[id].data.price_overview.discount_percent : undefined,
+                          genre: genres,
+                          creatorPlaytime:Math.round((gamelistCreatorInfos.find(el => el.appid == id).playtime_forever)/6.0)/10,
+                      };
+                      finalInfos[index] = finalInfo;
+                    }
+                    cb();
+                }, (err) => {
+                    console.log("failed to fetch");
+                    console.log(err);
+                    cb(err);
+                });
+        },
+        (err) => {
+            if (err) {
+                console.log('error');
+                return next(err);
+            }
+            res.render("gameDetail", { info: finalInfos , title: gamelist.title, description: gamelist.description, creator: username, active: "profile", user: req.user });
+        }
+    );
+
+    });
   });
 }
 
