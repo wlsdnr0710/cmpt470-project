@@ -1,5 +1,8 @@
 const GameList = require("../models/gameList");
 const Steam = require("../services/steamApi");
+const axios = require("axios").default;
+const superfetch = require("node-superfetch");
+const async = require("async");
 
 // Return index view. By default, the game lists are ordered by status.
 exports.index = function (req, res, next) {
