@@ -87,7 +87,7 @@ block content
                             div(class="modal-footer")
                                 button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                                 input(type="submit" class="btn btn-primary" id=`updateFormSubmit${ind}` form=`updateForm${ind}`)
-        ul(class="list-group")
+        ul(class="list-group" style="max-height: 55vh; overflow: auto;")
             each gameList, ind in gameLists
                 li(class='d-flex flex-row')
                     a(class="list-group-item list-group-item-action float-left w-75" href=gameList.detailsUrl) #{gameList.title}

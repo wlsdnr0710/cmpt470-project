@@ -149,15 +149,16 @@ exports.details = function (req, res, next) {
 // };
 
 // Adds the game with id 'gameId' to the game list with id 'gameListId'.
-exports.addGame = async function (gameId, gameListId, res, next) {
+exports.addGame = async function (gameId, ind, gameListId, res, next) {
   gameList = await GameList.model.findById(gameListId);
-  gameList.gameIds.push(gameId);
+  gameList.gameIds.splice(ind, 0, gameId);
   var r = await gameList.save();
   res.redirect("/addGames/"+gameListId);
 };
 
 exports.addGameToList = async function (req, res, next) {
-  return await exports.addGame(req.query.ownedGame, req.params.id, res, next);
+  let ind = parseInt(req.query.position)-1;
+  return await exports.addGame(req.query.ownedGame, ind, req.params.id, res, next);
 }
 
 // Removes the game with id 'gameId' from the game list with id 'gameListId'.
