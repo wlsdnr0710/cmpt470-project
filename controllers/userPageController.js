@@ -28,13 +28,12 @@ exports.renderUserPagebyId = async function (req, res, next) {
 
   GameList.model
     .find({ creatorSteamId: profileUser.steamId })
-    .exec((err, userGameLists) => {
+    .exec(async (err, userGameLists) => {
       if (err) return next(err);
-      let completedLists = userGameLists.filter((gl) => 
-        gl.status == GameList.Status.Completed
-      );
+
+      var numCompleted = await profileUser.numCompletedLists();
+
       console.log(userGameLists);
-      console.log(completedLists);
       res.render("userPage", {
         user: browsingUser,
         profileAvatar: profileAvatar,
@@ -43,8 +42,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
         browsingUser: browsingUser,
         gameLists: GameList.sort(userGameLists, GameList.SortFields.Status),
         listsCreated: userGameLists.length,
-        listsCompleted: completedLists.length,
-        active: "profile"
+        listsCompleted: numCompleted,
       });
     });
 };

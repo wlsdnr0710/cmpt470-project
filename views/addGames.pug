@@ -4,7 +4,7 @@ block content
     div(class='container d-flex')
       div(class='container flex-col')
         h2= "Owned Games"
-        form(id=`addGameForm`)
+        form(id=`addGameForm` action=`/database/addGame/${gameList._id}` method="get")
           div(class='form-group')
             each game, ind in ownedGameData
               div(class="form-check")
@@ -21,6 +21,3 @@ block content
                   p(class="list-group-item w-100 mb-0") #{game.name}
                   a(class="btn btn-danger float-right m-2" href=gameList.removeGameUrl(game.appid || game.appId))
                     i(class="fa fa-trash")
-    script.
-        var addGameUrl = JSON.parse('!{JSON.stringify(gameList.addGameUrl)}');
-    script(src='/scripts/addGame.js')

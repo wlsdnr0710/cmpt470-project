@@ -18,9 +18,11 @@ router.get("/:glID", function(req, res, next) {
       if (err) return next(err);
 
       // Of all the user's owned games, get those that are in this game list.
-      let gamesInList = allOwnedGames.filter((game) =>
-        gameList.gameIds.includes(game.appid || game.appId)
-      );
+      var gamesInList = new Array(gameList.gameIds.length);
+      gameList.gameIds.forEach(function(gId, ind) {
+        let foundGame = allOwnedGames.find(game => (game.appid || game.appId) == gId);
+        gamesInList[ind] = foundGame;
+      });
 
       // Of all the user's owned games, get those that are not in this game list.
       let gamesNotInList = allOwnedGames.filter((game) =>
