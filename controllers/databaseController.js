@@ -69,14 +69,13 @@ exports.details = function (req, res, next) {
       };
       axios(creatorInfoReq)
           .then((result) => {
-              for (i = 0; i < result.data.response.games.length; i++) {
+              for (i = 0; i < result.data.response.games.length; i++) {   // TODO: fix ordering refer /routes/addGames.js 20
                   var appid = result.data.response.games[i].appid;
                   if (!gameIds.includes(appid)) {
                       continue;
                   }
                   var playtime_forever = result.data.response.games[i].playtime_forever;
                   gameUserInfo = {
-                      // HERE : add achievement status, if possible 
                       appid: appid,
                       playtime: Math.round(playtime_forever/6.0) / 10,
                   };
@@ -88,7 +87,7 @@ exports.details = function (req, res, next) {
               var gameInfoURL = "https://store.steampowered.com/api/appdetails?appids="
               async.forEachOf(
                   gameIds,
-                  (id, placeholder, cb) => {
+                  (id, placeholder, cb) => {    //TODO: FIX random ordering - refer) userPageController.js 117
                       superfetch
                           .get("https://store.steampowered.com/api/appdetails?appids=" + id)
                           .then((result)=> {
