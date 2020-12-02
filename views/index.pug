@@ -1,6 +1,67 @@
 extends layout
 
 block content
-  include nav.pug
-  h1 Homepage
-  a(href="/login") Login Page
+  div(class='container' style={"width":"90%","background-color": "#1B2838"})
+    div(class='container' style={"display":"flex","justify-content": "space-between",'font-size': '60px'})
+      h1(style={"margin-top":0,"color": '#C5C3C0', 'font-size': '60px'}) Homepage
+      a(href="/login" style={'font-size': '60px'}) Login Page
+
+    div(class='container')
+      div(class='container')
+        p(style={"color":"white","font-size": '40px'}) leaderboard
+        div(style={"word-wrap": "break-word"})
+          ul(style={ "color":"#9099A1",'font-size': '30px'})
+            if(topfive.length)
+              each person in topfive
+                li  username: #{person.name}   lists completed: #{person.count}
+            else
+              li no one has completed any lists yet, start gaming gamers!
+      div(class='container')
+        p(style={"color":"white", 'font-size': '40px'}) Most popular game
+        div(style={"display":"flex","justify-content": "space-between","width":"45%"})
+          p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
+          img(src=gameimage alt='popular' style={"width":"45%"})
+
+
+
+
+    div(class='container' style={"margin-top":"5%","margin-left":"1%","margin-right":"2%","align-self": "flex-end","color": 'white'})
+      p(style={'font-size': '40px', "text-align": "center"}) Introduction
+      div(style={ "background-color":"#16202D", "margin": "auto","width": "70%","word-wrap": "break-word"})
+        p(style={"color":"#ACB2B8",'font-size': '20px'})
+          |Welcome! Users are often unsure of what to play next or have trouble keeping track of their progress, and that's where we come in.
+          |Our website allows you(steam user), to create custom game lists from existing games in your personal steam library.
+        p(style={"color":"#ACB2B8",'font-size': '20px'})
+          |Track and record your progress as you make your way through the lists.
+          |You can even share them with your friends and compete to see who is faster at finishing them!
+
+      p(style={'font-size': '40px',"text-align": "center"}) How it works
+      div(style={"background-color":"#16202D","margin-right":"2%","word-wrap": "break-word"})
+        p(style={'font-size': '30px'}) Login
+        div(style={"display":"flex","justify-content": "space-between","width":"100%"})
+          div(style={"width":"45%"})
+            p(style={"color":"#ACB2B8",'font-size': '20px'})
+              |In order to use our website, you have to own an existing Steam account,
+              |which can be used to login to our service.
+          img(src='./login_icon' alt='final user homepage' style={"width":"45%", "border":"solid 5px"})
+
+        p(style={'font-size': '30px'}) user homepage
+          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
+            div(style={"width":"45%", "word-wrap": "break-word"})
+              p(style={"color":"#ACB2B8",'font-size': '20px'})
+                |From here you could access all the gamelists you have created, view and edit them as you like.
+            img(src='./login_icon' alt='pic of working gamelist' style={"width":"45%", "border":"solid 5px"})
+
+        p(style={'font-size': '30px'}) gamelist & games
+          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
+            div(style={"width":"45%", "word-wrap": "break-word"})
+              p(style={"color":"#ACB2B8",'font-size': '20px'})
+                |list of games that you want be play, each game's status can be updated(active/in-progress/completed). Player with the most gamelists competed will be shown on the top of the leaderboard.
+              p(style={"color":"#ACB2B8",'font-size': '20px'})
+                |Inside the gamelist, you could view various metadata about the individual games such as playtime and achievements,
+                |and add or remove games from it.
+            img(src='./login_icon' alt='final working gamelist' style={"width":"45%", "border":"solid 5px"})
+            img(src='./login_icon' alt='individual games' style={"width":"45%", "border":"solid 5px"})
+
+
+
