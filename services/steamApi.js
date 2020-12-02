@@ -5,7 +5,8 @@ const async = require("async");
 
 // This module is responsible for handling queries to Steam API endpoints.
 
-const steamApiKey = "E8E95B7D362F3A6D263CBDFB6F694293";
+// TODO: Use another api key if this one isn't working
+const steamApiKey = "FEF3604CF3452FE9F597879DA82642DA";
 
 // Holds URLs for different Steam API endpoints.
 const endpoints = {
