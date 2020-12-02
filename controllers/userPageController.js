@@ -90,7 +90,8 @@ exports.renderFollowersPage = async function (req, res, next) {
   console.log("got info for all followers,", followers_info);
   res.render("followers", {
     title: pageUser.username + " | Steam Rolled",
-    user: pageUser,
+    user: req.user,
+    pageUser: pageUser,
     isLoggedInUserPage,
     followers: followers_info,
   });
@@ -141,7 +142,8 @@ exports.renderFollowingPage = async function (req, res, next) {
       console.log("got info for all following,", following_info);
       res.render("following", {
         title: pageUser.username + " | Steam Rolled",
-        user: pageUser,
+        user: req.user,
+        pageUser: pageUser,
         isLoggedInUserPage,
         allFollowed: following_info,
       });

@@ -1,16 +1,16 @@
-const input = document.getElementById('searchtext');
+const input = document.querySelector('input');
 
-input.addEventListener('change', updatelistgroup);
+input.addEventListener('input', updatelistgroup);
 
 function updatelistgroup(e) {
     let query = e.target.value;
     for(var x = 0; x < users.length; x++) {
         var box = document.getElementById('a'+x);
-        if(document.getElementById('username'+x).innerHTML.includes(query)) {
-            box.collapse('show');
+        if(document.getElementById('username'+x).innerHTML.toLowerCase().includes(query)) {
+            box.classList.add('show');
         }
         else{
-            box.collapse('hide');
+            box.classList.remove('show');
         }
     }
 }

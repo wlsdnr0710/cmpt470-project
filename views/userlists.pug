@@ -9,6 +9,7 @@ block content
         .list-group
             - for(var x = 0; x < users.length;  x++)
                 a(href=`/userPage/${users[x]._id}`,id=`a${x}`, class='list-group-item list-group-item-action collapse show')
+                    button(id=`button${x}`, class='invisible btn', data-toggle='collapse', data-target=`a${x}` )
                     div(class='d-flex w-100 justify-content-between')
                         h5(class='mb-1', id=`username${x}`) #{users[x].username}
                         if loggedInUser.following.includes(`${users[x]._id}`)
