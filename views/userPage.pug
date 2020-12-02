@@ -18,17 +18,11 @@ block content
                             a(href=`${profileUser._id}/following`)= "Following:"
                             a= " " + profileUser.following.length
                 if !browsingUserOwnsPage 
+                    
                     if browsingUser.following.includes(`${profileUser._id}`)
-                        form(action='/userPage/unfollow', method='post')
-                            input(type='hidden', id='profileUserId', name='profileUserId',  value=`${profileUser._id}`)
-                            input(type='hidden', id='loggedInUserId', name='loggedInUserId',  value=`${browsingUser._id}`)
-                            input(type='submit', class='btn btn-secondary', value="- UnFollow")
+                        a(href=`/userPage/${profileUser._id}/unfollow`, role='button', class='btn btn-secondary') Unfollow
                     else
-                        form(action='/userPage/follow', method='post')
-                            input(type='hidden', id='profileUserId', name='profileUserId',  value=`${profileUser._id}`)
-                            input(type='hidden', id='loggedInUserId', name='loggedInUserId',  value=`${browsingUser._id}`)
-                            input(type='submit', class='btn btn-primary', value="+ Follow")
-
+                        a(href=action=`/userPage/${profileUser._id}/follow`, role='button', class='btn btn-primary') Follow
         h2= "Backlogs"
         if browsingUserOwnsPage
             block createListButton
