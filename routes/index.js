@@ -24,6 +24,7 @@ router.get("/", function (req, res, next) {
         }
       }
     }
+
     // go through all lists and accumulate unique ids
     var appearance = 0;
     for (var key in dict) {
