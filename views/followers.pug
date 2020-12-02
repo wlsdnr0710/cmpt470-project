@@ -1,15 +1,14 @@
 extends layout
-
 block content
     include nav
-
-    h1= pageUser.username
-
-    h2= "Followers"
-    ul(class='ulRedirect')
-        each follower in followers
-            li(class='liRedirect')
-                a(href=follower.pageUrl) 
-                  img(class='icon_img' src=follower.avatar)
-                  <h3> #{follower.personaname} </h3>
-                        
+    .container
+        .list-group
+            h1= pageUser.username
+            h2= "Followers"
+        .list-group(style="height: 75vh; overflow: auto;")
+            each follower, ind in followers
+                a(href=follower.pageUrl, id=`a${ind}`, class='list-group-item list-group-item-action collapse show')
+                    button(id=`button${ind}`, class='invisible btn', data-toggle='collapse', data-target=`a${ind}` )
+                    div(class='d-flex w-100 justify-content-between')
+                        h5(class='mb-1', id=`username${ind}`) #{follower.personaname}
+                        img(src=follower.avatar)
