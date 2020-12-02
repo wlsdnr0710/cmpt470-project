@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Schema to hold Steam game information.
+// Schema to hold Steam game information. Matches name of keys in actual GetOwnedGames call.
 const GameSchema = Schema({
-  appId: { type: Number, required: true },
+  appid: { type: Number, required: true },
   name: { type: String, required: true },
-  playtimeForever: { type: Number, required: true },
-  imgIconUrl: { type: String, required: true },
-  imgLogoUrl: { type: String, required: true },
+  playtime_forever: { type: Number, required: true },
+  img_icon_url: { type: String, required: true },
+  img_logo_url: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Game", GameSchema);
