@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const GameList = require("../models/gameList").model;
+const GameList = require("../models/gameList");
 const User = require("../models/user");
-const Game = require("../models/Game");
+const Game = require("../models/game");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   // User.find({gameIds: { $ne: null }}).exec((err, foundGameList) => {
   // check users completed lists for leaderboard
   // }
-  GameList.find({ gameIds: { $ne: null } }).exec((err, foundGameList) => {
+  GameList.model.find({ gameIds: { $ne: null } }).exec((err, foundGameList) => {
     if (err) return next(err);
     // need mark as completed to check
     var dict = {};
