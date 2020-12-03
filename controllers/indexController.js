@@ -88,6 +88,8 @@ exports.index = function (req, res, next) {
                 gamename: name,
                 gameimage: img,
                 topfive: top_five,
+                active: "home",
+                user: req.user
                 });
             });
         });
