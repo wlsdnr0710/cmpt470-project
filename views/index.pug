@@ -19,9 +19,11 @@ block content
       div(class='container')
         p(style={"color":"white", 'font-size': '40px'}) Most popular game
         div(style={"display":"flex","justify-content": "space-between","width":"45%"})
-          p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
-          img(src=gameimage alt='popular' style={"width":"45%"})
-
+          if gamename=="none"
+            p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
+          else
+            p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
+            img(src=gameimage alt='popular' style={"width":"45%"})
 
 
 
