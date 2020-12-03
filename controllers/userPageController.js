@@ -33,7 +33,10 @@ exports.renderUserPagebyId = async function (req, res, next) {
       if (err) return next(err);
 
       var numCompleted = await profileUser.numCompletedLists();
-
+      let active = "other"
+      if(browsingUserOwnsPage){
+        active = "profile"
+      }
       console.log(userGameLists);
       res.render("userPage", {
         user: browsingUser,
@@ -44,6 +47,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
         gameLists: GameList.sort(userGameLists, GameList.SortFields.Status),
         listsCreated: userGameLists.length,
         listsCompleted: numCompleted,
+        active: active,
       });
     });
 };
