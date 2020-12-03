@@ -34,7 +34,7 @@ GameListSchema.virtual("updateUrl").get(function () {
 });
 
 GameListSchema.virtual("addGameUrl").get(function () {
-  return "/database/addGame/" + this._id;
+  return "/addGames/" + this._id;
 });
 
 GameListSchema.methods.removeGameUrl = function (gameId) {

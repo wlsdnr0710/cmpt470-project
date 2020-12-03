@@ -17,9 +17,10 @@ const endpoints = {
     "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/",
 };
 
-// Returns true if a JSON response is empty, false otherwise.
-function emptyResponse(res) {
-  return Object.keys(res).length === 0;
+// Returns true if there was a problem in an HTTP response, false otherwise.
+// In particular, if there was an error or if the response is empty.
+function problemInResponse(res) {
+  return res.status >= 400 || Object.keys(res.data.response).length === 0;
 }
 
 // Caches the given games in the database, if they are not already cached.
@@ -98,7 +99,7 @@ exports.getOwnedGames = async function (steamId, allowCache, callback) {
       // console.log("response result", res.data.response);
       // console.log("games result", games);
       // console.log(emptyResponse(res.data.response));
-      if (emptyResponse(res.data.response) && allowCache) {
+      if (problemInResponse(res) && allowCache) {
         // TODO: Handle 429 error as well
         console.log("Loading from cache");
         return tryLoadCachedGames(steamId, callback);

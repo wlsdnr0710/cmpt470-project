@@ -15,7 +15,7 @@ exports.index = function (req, res, next) {
 };
 
 // Save a GameList to the db.
-exports.create = function (req) {
+exports.create = function (req, res) {
   let gameList = new GameList.model({
     title: req.fields.title,
     description: req.fields.description,
@@ -23,7 +23,7 @@ exports.create = function (req) {
   });
 
   gameList.save((err) => {
-    if (err) console.error(err);
+    if (err) return console.error(err);
   });
 };
 
@@ -111,20 +111,21 @@ exports.details = function (req, res, next) {
           if (err) {
             console.log("error");
             return next(err);
-          } 
-          Steam.getPlayerSummariesWithSteamId(gamelist.creatorSteamId, function (
-            summary
-          ){
-            res.render("gameDetail", {
-              info: finalInfos,
-              listName: gamelist.title,
-              title: gamelist.title + " | Steam Rolled",
-              description: gamelist.description,
-              creator: summary.personaname,
-              active: "profile",
-              user: req.user,
-            });
-          });
+          }
+          Steam.getPlayerSummariesWithSteamId(
+            gamelist.creatorSteamId,
+            function (summary) {
+              res.render("gameDetail", {
+                info: finalInfos,
+                listName: gamelist.title,
+                title: gamelist.title + " | Steam Rolled",
+                description: gamelist.description,
+                creator: summary.personaname,
+                active: "profile",
+                user: req.user,
+              });
+            }
+          );
         }
       );
     });
