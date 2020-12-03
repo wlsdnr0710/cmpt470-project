@@ -10,12 +10,14 @@ block content
       div(class='container')
         p(style={"color":"white","font-size": '40px'}) leaderboard
         div(style={"word-wrap": "break-word"})
-          ul(style={ "color":"#9099A1",'font-size': '30px'})
+          table(style={ "color":"#9099A1",'font-size': '30px'})
             if(topfive.length)
               each user in topfive
-                li= user
+                tr 
+                  td username: #{user[0]} &nbsp&nbsp  
+                  td completed: #{user[1]} 
             else
-              li no one has completed any lists yet, start gaming gamers!
+              tr no one has completed any lists yet, start gaming gamers!
       div(class='container')
         p(style={"color":"white", 'font-size': '40px'}) Most popular game
         div(style={"display":"flex","justify-content": "space-between","width":"45%"})
