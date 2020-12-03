@@ -2,28 +2,29 @@ extends layout
 
 block content
   include nav.pug
-  h1 #{title}  
-  h3 by #{creator}
-  p description : #{description}
-
-  ul
-  each game in info
-    li
-      h1 #{game.name}
-      each genre in game.genre
-        span(class="badge badge-primary badge-pill float-right ml-3") #{genre}
-      p 
-      img(src=game.image)
-      p #{game.short_description}
-      if game.isFree || game.price === undefined
-        p Free Game
+  .container
+    h1 #{title}  
+    h3 Creator: #{creator}
+    p Description : #{description}
+    ul(class='list-group')
+      each game in info
+        .list-group-item
+          h1(class="float-left") #{game.name}
+          each genre in game.genre
+            span(class="badge badge-primary badge-pill float-right ml-3") #{genre}
+          h1 &nbsp
+          img(src=game.image)
+          p #{game.short_description}
+          if game.isFree || game.price === undefined
+            p Free Game
+          else
+            if game.discount === 0
+              p #{game.price}
+            else
+              p #{game.price} - On Sale : #{game.discount}%
+          p #{game.creatorPlaytime} hours played by author.
       else
-        if game.discount === 0
-          p #{game.price}
-        else
-          p #{game.price} - On Sale : #{game.discount}%
-      p #{game.creatorPlaytime} hours played by author.
-  else
-    li "No Game Lists"
+        .list-group-item 
+          p No Game Added
 
-  a(href="/userPage/") Back to profile
+  //- a(href="/userPage/") Back to profile

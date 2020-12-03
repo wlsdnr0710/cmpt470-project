@@ -12,7 +12,7 @@ block content
           div(class='form-group' style="max-height: 55vh; overflow: auto;")
             each game, ind in ownedGameData
               div(class="form-check")
-                input(class="form-check-input" type="radio" name="ownedGame" id=`ownedGame${ind}` value=`${game.appid || game.appId}` required checked)
+                input(class="form-check-input" type="radio" name="ownedGame" id=`ownedGame${ind}` value=`${game.appid || game.appId}` required)
                 label(class="form-check-label" for=`ownedGame${ind}`) #{game.name}
       div(class='container flex-col align-self-center w-50')
         button(type="submit" class="btn btn-primary" id=`addGameSubmit` form=`addGameForm`)

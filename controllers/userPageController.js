@@ -19,6 +19,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
   let profileUser = browsingUserOwnsPage
     ? browsingUser
     : await User.findById(req.params.id);
+  console.log(profileUser);
 
   let profileAvatar;
   await steamApi.getPlayerSummaries(

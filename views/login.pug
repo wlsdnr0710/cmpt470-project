@@ -2,16 +2,19 @@ extends layout
 
 block content
   include nav.pug
-  p For testing, please click the button below login to Steam and use the following credentials:
-  ul
-    li Username: 470SteamUser
-    li Password: cmpt470-2020
+  .container
+    
+    if !user
+      h2 Login with Steam
+      p
+      a(href="login/steam") 
+          img(src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt='login with steam')
+      p &nbsp
+      p For testing, please click the button below login to Steam and use the following credentials:
+      ul
+        li Username: 470SteamUser
+        li Password: cmpt470-2020
 
-  if !user
-    h2 please login
-    p
-    a(href="login/steam") 
-        img(src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt='login with steam')
-  else
-    h2 hello #{user.username} 
-    a(href="login/logout") Logout
+    else
+      h2 Hello #{user.username} 
+      a(href="login/logout") Logout

@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const async = require("async");
 const Steam = require("../services/steamApi");
+const loginController = require("../controllers/loginController");
 
 const GameList = require("../models/gameList");
 const Game = require("../models/game");
 
-router.get("/:glID", function(req, res, next) {
+router.get("/:glID", loginController.checkIfLoggedIn, function(req, res, next) {
   GameList.model.findById(req.params.glID).exec((err, gameList) => {
     if (err) return next(err);
     if (req.user.steamId != gameList.creatorSteamId)

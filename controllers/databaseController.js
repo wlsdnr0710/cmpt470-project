@@ -53,13 +53,6 @@ exports.details = function (req, res, next) {
   GameList.model.findById(req.params.id, function (err, gamelist) {
     if (err) return next(err);
     var gamelistCreatorInfos = new Array(gamelist.gameIds.length);
-    var username = "Anonymous";
-    Steam.getPlayerSummariesWithSteamId(gamelist.creatorSteamId, function (
-      summary
-    ) {
-      username = summary.personaname;
-    });
-
     Steam.getOwnedGames(gamelist.creatorSteamId, true, (err, allOwnedGames) => {
       if (err) return next(err);
       gamelist.gameIds.forEach(function (gameId, index) {
@@ -118,14 +111,18 @@ exports.details = function (req, res, next) {
           if (err) {
             console.log("error");
             return next(err);
-          }
-          res.render("gameDetail", {
-            info: finalInfos,
-            title: gamelist.title,
-            description: gamelist.description,
-            creator: username,
-            active: "profile",
-            user: req.user,
+          } 
+          Steam.getPlayerSummariesWithSteamId(gamelist.creatorSteamId, function (
+            summary
+          ){
+            res.render("gameDetail", {
+              info: finalInfos,
+              title: gamelist.title,
+              description: gamelist.description,
+              creator: summary.personaname,
+              active: "profile",
+              user: req.user,
+            });
           });
         }
       );
@@ -136,8 +133,10 @@ exports.details = function (req, res, next) {
 // Adds the game with id 'gameId' to the game list with id 'gameListId'.
 exports.addGame = async function (gameId, ind, gameListId, res, next) {
   gameList = await GameList.model.findById(gameListId);
-  gameList.gameIds.splice(ind, 0, gameId);
-  var r = await gameList.save();
+  if (!gameList.gameIds.includes(gameId)) {
+    gameList.gameIds.splice(ind, 0, gameId);
+    var r = await gameList.save();
+  }
   res.redirect("/addGames/" + gameListId);
 };
 
