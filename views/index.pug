@@ -1,42 +1,26 @@
-doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous")
-    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN",
-      crossorigin="anonymous")
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    
-    
-  body(style={"background-color": "#1B2838"})
-    block content
-    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+extends layout
 
 block content
-  include nav.pug
   div(class='container' style={"width":"90%","background-color": "#1B2838"})
-    div(class='container' style={"display":"flex", "justify-content": "space-between",'font-size': '60px'})
-      //- h1(style={"margin-top":0,"color": '#C5C3C0', 'font-size': '60px'}) STEAMROLLED
-      //- a(href="/login" style={'font-size': '60px'}) Login Page
+    div(class='container' style={"display":"flex","justify-content": "space-between",'font-size': '60px'})
+      h1(style={"margin-top":0,"color": '#C5C3C0', 'font-size': '60px'}) STEAMROLLED
+      a(href="/login" style={'font-size': '60px'}) Login Page
 
-    div(class='container' )
-      div(class='container', style={"margin": "auto"})
-        p(style={"color":"white","font-size": '40px', "text-align": "center"}) Leaderboard
+    div(class='container')
+      div(class='container')
+        p(style={"color":"white","font-size": '40px'}) leaderboard
         div(style={"word-wrap": "break-word"})
-          table(style={ "color":"#9099A1",'font-size': '30px', "margin":"auto"})
+          table(style={ "color":"#9099A1",'font-size': '30px'})
             if(topfive.length)
               each user in topfive
                 tr 
-                  td Username: #{user[0]} &nbsp&nbsp  
-                  td Completed: #{user[1]} 
+                  td username: #{user[0]} &nbsp&nbsp  
+                  td completed: #{user[1]} 
             else
               tr no one has completed any lists yet, start gaming gamers!
       div(class='container')
-        p(style={"color":"white", 'font-size': '40px', "text-align": "center"}) Most popular game
-        div(style={"display":"flex","justify-content": "space-between","width":"45%", "margin":"auto"})
+        p(style={"color":"white", 'font-size': '40px'}) Most popular game
+        div(style={"display":"flex","justify-content": "space-between","width":"45%"})
           if gamename=="none"
             p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
           else
@@ -47,7 +31,7 @@ block content
 
     div(class='container' style={"margin-top":"5%","margin-left":"1%","margin-right":"2%","align-self": "flex-end","color": 'white'})
       p(style={'font-size': '40px', "text-align": "center"}) Introduction
-      div(style={ "background-color":"#16202D","margin": "auto", "padding": "20px","width": "70%","word-wrap": "break-word" })
+      div(style={ "background-color":"#16202D", "margin": "auto","width": "70%","word-wrap": "break-word"})
         p(style={"color":"#ACB2B8",'font-size': '20px'})
           |Welcome! Users are often unsure of what to play next or have trouble keeping track of their progress, and that's where we come in.
           |Our website allows you(steam user), to create custom game lists from existing games in your personal steam library.
@@ -56,32 +40,45 @@ block content
           |You can even share them with your friends and compete to see who is faster at finishing them!
 
       p(style={'font-size': '40px',"text-align": "center"}) How it works
-      div(style={"background-color":"#16202D","margin-right":"2%","word-wrap": "break-word", "padding": "20px"})
+      div(style={"background-color":"#16202D","margin-right":"2%","word-wrap": "break-word"})
         p(style={'font-size': '30px'}) Login
-        div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-          div(style={"width":"45%"})
-            p(style={"color":"#ACB2B8",'font-size': '20px'})
-              |In order to use our website, you have to own an existing Steam account,
-              |which can be used to login to our service.
-          img(src='./login_icon' alt='final user homepage' style={"width":"45%", "border":"solid 5px"})
+          p(style={"padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+            |In order to use our website, you have to own an existing Steam account,
+            |which can be used to login to our service.
+        img(style={"margin-right":"5%", "width":"45%"} src='images/login.jpg' alt='index')
+        img( style={"width":"45%"} src='images/steam.jpg' alt='steam')
 
-        p(style={'font-size': '30px'}) User Homepage
-          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-            div(style={"width":"45%", "word-wrap": "break-word"})
-              p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |From here you could access all the gamelists you have created, view and edit them as you like.
-            img(src='./login_icon' alt='pic of working gamelist' style={"width":"45%", "border":"solid 5px"})
 
-        p(style={'font-size': '30px'}) Gamelist & Games
-          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-            div(style={"width":"45%", "word-wrap": "break-word"})
+      div(style={"display":"flexbox","background-color":"#16202D","margin-right":"2%","word-wrap": "break-word"})
+        div(style={"display":"flex"})
+          div(style={"width":"45%", "float":"left"})
+            p(style={'font-size': '30px'}) user homepage
+              p(style={"float":"left","width":"80%","padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+                |From here you could access all the gamelists you have created, 
+                |view and edit them as you like.
+          div(style={"margin-left":"5%","width":"45%"})
+            p(style={'font-size': '30px'}) gamelist
               p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |List of games that you want be play, each game's status can be updated(active/in-progress/completed). Player with the most gamelists competed will be shown on the top of the leaderboard.
-              p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |Inside the gamelist, you could view various metadata about the individual games such as playtime and achievements,
-                |and add or remove games from it.
-            img(src='./login_icon' alt='final working gamelist' style={"width":"45%", "border":"solid 5px"})
-            img(src='./login_icon' alt='individual games' style={"width":"45%", "border":"solid 5px"})
+                  |list of games that you want be play, each game's status can be updated(active/in-progress/completed). 
+                  |Player with the most gamelists competed will be shown on the top of the leaderboard.
+
+        img(style={"margin-right":"5%", "width":"45%"} src='images/userhome.jpg' alt='userhome')
+        img(style={"width":"45%"} src='images/list.jpg' alt='list' )
+
+
+
+        div(style={"margin-top":"3%","display":"flex"})
+          div(style={"margin-right":"5%","float":"left"})
+            p(style={'font-size': '30px'}) friends
+              p(style={"float":"left","width":"80%","padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+                |The users that you follow and follows you can both be found on the user homepage.
+                |You could search for other users on our website, and follow them to check out their gamelists!
+        img(style={"margin-right":"5%", "width":"45%"} src='images/search.jpg' alt='search')
+        img(style={"margin-right":"5%", "width":"45%"} src='images/followers.jpg' alt='followers')
+        img(style={"margin-right":"5%", "width":"45%"} src='images/follower.jpg' alt='follower')
+
+
+
 
 
 
