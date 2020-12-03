@@ -3,25 +3,29 @@ extends layout
 block content
   div(class='container' style={"width":"90%","background-color": "#1B2838"})
     div(class='container' style={"display":"flex","justify-content": "space-between",'font-size': '60px'})
-      h1(style={"margin-top":0,"color": '#C5C3C0', 'font-size': '60px'}) Homepage
+      h1(style={"margin-top":0,"color": '#C5C3C0', 'font-size': '60px'}) STEAMROLLED
       a(href="/login" style={'font-size': '60px'}) Login Page
 
     div(class='container')
       div(class='container')
         p(style={"color":"white","font-size": '40px'}) leaderboard
         div(style={"word-wrap": "break-word"})
-          ul(style={ "color":"#9099A1",'font-size': '30px'})
+          table(style={ "color":"#9099A1",'font-size': '30px'})
             if(topfive.length)
-              each person in topfive
-                li  username: #{person.name}   lists completed: #{person.count}
+              each user in topfive
+                tr 
+                  td username: #{user[0]} &nbsp&nbsp  
+                  td completed: #{user[1]} 
             else
-              li no one has completed any lists yet, start gaming gamers!
+              tr no one has completed any lists yet, start gaming gamers!
       div(class='container')
         p(style={"color":"white", 'font-size': '40px'}) Most popular game
         div(style={"display":"flex","justify-content": "space-between","width":"45%"})
-          p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
-          img(src=gameimage alt='popular' style={"width":"45%"})
-
+          if gamename=="none"
+            p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
+          else
+            p(style={"color":"#9099A1",'font-size': '35px', "font-weight":"normal"}) #{gamename}
+            img(src=gameimage alt='popular' style={"width":"45%"})
 
 
 
