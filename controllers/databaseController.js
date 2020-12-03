@@ -133,8 +133,10 @@ exports.details = function (req, res, next) {
 // Adds the game with id 'gameId' to the game list with id 'gameListId'.
 exports.addGame = async function (gameId, ind, gameListId, res, next) {
   gameList = await GameList.model.findById(gameListId);
-  gameList.gameIds.splice(ind, 0, gameId);
-  var r = await gameList.save();
+  if (!gameList.gameIds.includes(gameId)) {
+    gameList.gameIds.splice(ind, 0, gameId);
+    var r = await gameList.save();
+  }
   res.redirect("/addGames/" + gameListId);
 };
 
