@@ -29,7 +29,8 @@ router.get("/:glID", loginController.checkIfLoggedIn, function(req, res, next) {
       let gamesNotInList = allOwnedGames.filter((game) =>
         !(gameList.gameIds.includes(game.appid || game.appId))
       );
-      res.render("addGames", { 
+      res.render("addGames", {
+        title: gameList.title + " | Steam Rolled",
         gameList: gameList, 
         listGameData: gamesInList, 
         ownedGameData: gamesNotInList,

@@ -84,12 +84,13 @@ exports.index = function (req, res, next) {
                 }
                 // console.log(img);
                 res.render("index", {
-                popular: most_wanted_game,
-                gamename: name,
-                gameimage: img,
-                topfive: top_five,
-                active: "home",
-                user: req.user
+                    title: "Home | Steam Rolled",
+                    popular: most_wanted_game,
+                    gamename: name,
+                    gameimage: img,
+                    topfive: top_five,
+                    active: "home",
+                    user: req.user
                 });
             });
         });

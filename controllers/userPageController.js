@@ -39,6 +39,7 @@ exports.renderUserPagebyId = async function (req, res, next) {
       }
       console.log(userGameLists);
       res.render("userPage", {
+        title: profileUser.username + " | Steam Rolled",
         user: browsingUser,
         profileAvatar: profileAvatar,
         profileUser: profileUser,
