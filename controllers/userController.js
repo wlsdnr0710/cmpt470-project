@@ -16,7 +16,14 @@ exports.index = async function (req, res, next) {
       };
     });
   }
-  res.render("userlists", { user: req.user, loggedInUser: req.user, users: allUsers, user_info: user_info, active: "search" });
+  res.render("userlists", {
+    title: "Search | Steam Rolled",
+    user: req.user,
+    loggedInUser: req.user,
+    users: allUsers,
+    user_info: user_info,
+    active: "search"
+  });
 };
 
 

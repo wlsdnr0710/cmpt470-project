@@ -117,7 +117,8 @@ exports.details = function (req, res, next) {
           ){
             res.render("gameDetail", {
               info: finalInfos,
-              title: gamelist.title,
+              listName: gamelist.title,
+              title: gamelist.title + " | Steam Rolled",
               description: gamelist.description,
               creator: summary.personaname,
               active: "profile",

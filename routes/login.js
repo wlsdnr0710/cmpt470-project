@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
     res.redirect('/userPage');
   }
 
-  res.render('login', { active: 'login' });
+  res.render('login', { title: "Login | Steam Rolled", active: 'login' });
 })
 
 router.get('/logout', function(req, res){
