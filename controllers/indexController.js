@@ -24,7 +24,6 @@ exports.index = function (req, res, next) {
         var appearance = 0;
         var most_wanted_game = 0;
         var img = "";
-        var name = "";
         for (var key in dict) {
             if (dict[key] > appearance) {
                 appearance = dict[key];
@@ -48,50 +47,60 @@ exports.index = function (req, res, next) {
                 // console.log(" INNER FOUND GAME", foundgame);
                 // console.log("users:",users);
                 var dict = {};
+                var arr = [];
                 var counts = users.length;
-                for (var i = 0; i < users.length; i++) {
+                for(var i=0;i<users.length;i++){
                     dict[users[i].username] = 0;
-                    // console.log(dict);
-                    users[i].numCompletedLists()
-                    .then(function(data) {
-                        // console.log("user"+i+"'s lists completed: "+data);
-                    }) 
                 }
-                // dict["CMPT470User"] = 2;
-                // dict["CarlB"] = 1;
-                // dict["JK"] = 5;
-                // console.log(" INNER FOUND GAME ATER", foundgame);
 
-                var users_arr = Object.keys(dict).map(function(key) {
-                    return [key, dict[key]];
-                });
-                // Sort the array based on the second element
-                users_arr.sort(function(first, second) {
-                    return second[1] - first[1];
-                });
-                
-                // Create a new array with only the first 5 items
-                console.log("RESULT: ",users_arr);
-                top_five = users_arr.slice(0, 5);
-                // console.log("RESULT: ",top_five);
-                console.log("topfive: ",top_five);
-                var name = "";
-                if(foundgame){
-                    name = foundgame[0].name;
+                for (var i = 0; i < users.length; i++) {
+                    users[i].numCompletedLists().then(data=>{
+                        arr.push(data);
+                        counts --;
+                        if(counts==0){
+                            for (var key in dict) {
+                                dict[key] = arr[counts];
+                                counts++;
+                            }
+                            // console.log("final dict after:",dict);
+
+                            var users_arr = Object.keys(dict).map(function(key) {
+                                return [key, dict[key]];
+                            });
+                            // console.log(users_arr);
+                            // Sort the array based on the second element
+                            users_arr.sort(function(first, second) {
+                                return second[1] - first[1];
+                            });
+                            // console.log(users_arr);
+
+                            // // Create a new array with only the first 5 items
+                            // console.log("RESULT: ",users_arr);
+                            var top_five = [];
+                            top_five = users_arr.slice(0, 5);
+
+                            // console.log("RESULT: ",top_five);
+                            // console.log("topfive: ",top_five);
+                            var name = "";
+                            if(foundgame){
+                                name = foundgame[0].name;
+                            }
+                            else{
+                                name = "none";
+                            }
+                            // console.log(img);
+                            res.render("index", {
+                            popular: most_wanted_game,
+                            gamename: name,
+                            gameimage: img,
+                            topfive: top_five,
+                            active: "home",
+                            user: req.user
+                            }); 
+                        }  
+                    })
+                    .catch(console.log(err))
                 }
-                else{
-                    name = "none";
-                }
-                // console.log(img);
-                res.render("index", {
-                    title: "Home | Steam Rolled",
-                    popular: most_wanted_game,
-                    gamename: name,
-                    gameimage: img,
-                    topfive: top_five,
-                    active: "home",
-                    user: req.user
-                });
             });
         });
     });
