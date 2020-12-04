@@ -7,7 +7,7 @@ block content
         form(id=`addGameForm` action=`/database/addGame/${gameList._id}` method="get")
           div(class='form-group')
             div(class="form-check")
-              label(class="col-form-label" for="position") Position in Backlog
+              label(class="col-form-label" for="position") Position in Gamelist
               input(class="form-control w-25" type="number" name="position" id="position" value=(listGameData.length + 1) min=1 max=(listGameData.length + 1) required)
           div(class='form-group' style="max-height: 55vh; overflow: auto;")
             each game, ind in ownedGameData

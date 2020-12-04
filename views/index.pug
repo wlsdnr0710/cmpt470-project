@@ -47,7 +47,7 @@ block content
 
     div(class='container' style={"margin-top":"5%","margin-left":"1%","margin-right":"2%","align-self": "flex-end","color": 'white'})
       p(style={'font-size': '40px', "text-align": "center"}) Introduction
-      div(style={ "background-color":"#16202D","margin": "auto", "padding": "20px","width": "70%","word-wrap": "break-word" })
+      div(style={ "background-color":"#16202D", "margin": "auto","width": "70%","word-wrap": "break-word"})
         p(style={"color":"#ACB2B8",'font-size': '20px'})
           |Welcome! Users are often unsure of what to play next or have trouble keeping track of their progress, and that's where we come in.
           |Our website allows you(steam user), to create custom game lists from existing games in your personal steam library.
@@ -56,32 +56,43 @@ block content
           |You can even share them with your friends and compete to see who is faster at finishing them!
 
       p(style={'font-size': '40px',"text-align": "center"}) How it works
-      div(style={"background-color":"#16202D","margin-right":"2%","word-wrap": "break-word", "padding": "20px"})
+      div(style={"background-color":"#16202D","margin-right":"2%","word-wrap": "break-word"})
         p(style={'font-size': '30px'}) Login
-        div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-          div(style={"width":"45%"})
-            p(style={"color":"#ACB2B8",'font-size': '20px'})
-              |In order to use our website, you have to own an existing Steam account,
-              |which can be used to login to our service.
-          img(src='./login_icon' alt='final user homepage' style={"width":"45%", "border":"solid 5px"})
+          p(style={"padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+            |In order to use our website, you have to own an existing Steam account,
+            |which can be used to register and login to our service.
+        img(style={"margin-right":"5%", "width":"45%"} src='images/login.JPG' alt='index')
+        img( style={"width":"45%"} src='images/steam.JPG' alt='steam')
 
-        p(style={'font-size': '30px'}) User Homepage
-          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-            div(style={"width":"45%", "word-wrap": "break-word"})
-              p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |From here you could access all the gamelists you have created, view and edit them as you like.
-            img(src='./login_icon' alt='pic of working gamelist' style={"width":"45%", "border":"solid 5px"})
 
-        p(style={'font-size': '30px'}) Gamelist & Games
-          div(style={"display":"flex","justify-content": "space-between","width":"100%"})
-            div(style={"width":"45%", "word-wrap": "break-word"})
+      div(style={"display":"flexbox","background-color":"#16202D","margin-right":"2%","word-wrap": "break-word"})
+        div(style={"display":"flex"})
+          div(style={"width":"45%", "float":"left"})
+            p(style={'font-size': '30px'}) User Homepage
+              p(style={"float":"left","width":"80%","padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+                |From here you can access all the gamelists you have created, and
+                |view and edit them as you like.
+          div(style={"margin-left":"5%","width":"45%"})
+            p(style={'font-size': '30px'}) Gamelist
               p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |List of games that you want be play, each game's status can be updated(active/in-progress/completed). Player with the most gamelists competed will be shown on the top of the leaderboard.
-              p(style={"color":"#ACB2B8",'font-size': '20px'})
-                |Inside the gamelist, you could view various metadata about the individual games such as playtime and achievements,
-                |and add or remove games from it.
-            img(src='./login_icon' alt='final working gamelist' style={"width":"45%", "border":"solid 5px"})
-            img(src='./login_icon' alt='individual games' style={"width":"45%", "border":"solid 5px"})
+                  |Users can create gamelists and add games from their steam library to them. Each gamelist's status can be updated(active/in-progress/completed). 
+                  |The player with the most gamelists competed will be shown on the top of the leaderboard.
+
+        img(style={"margin-right":"5%", "width":"45%"} src='images/userhome.JPG' alt='userhome')
+        img(style={"width":"45%"} src='images/list.JPG' alt='list' )
+
+
+
+        div(style={"margin-top":"3%","display":"flex"})
+          div(style={"margin-right":"5%","float":"left"})
+            p(style={'font-size': '30px'}) Friends
+              p(style={"float":"left","width":"80%","padding-left":"2%","color":"#ACB2B8",'font-size': '20px'})
+                |Your followers and the users you follow can both be found on the your profile page.
+                |You can search for other users using the search page, and check out their profiles!
+        img(style={"margin-right":"5%", "width":"45%"} src='images/search.JPG' alt='search')
+        img(style={"margin-right":"5%", "width":"45%"} src='images/followers.JPG' alt='followers')
+        img(style={"margin-right":"5%", "width":"45%"} src='images/follower.JPG' alt='follower')
+
 
 
 
